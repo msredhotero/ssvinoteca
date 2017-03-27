@@ -34,7 +34,7 @@ $eliminar = "eliminarCategorias";
 
 $insertar = "insertarCategorias";
 
-$tituloWeb = "Gestión: Libreria";
+$tituloWeb = "Gestión: Vinoteca";
 //////////////////////// Fin opciones ////////////////////////////////////////////////
 
 

@@ -19,7 +19,7 @@ session_destroy();
 
 
 
-<title>Sistema de Libreria</title>
+<title>Sistema de Vinoteca</title>
 
 
 

@@ -41,7 +41,7 @@ $modificar = "modificarMarca";
 
 $idTabla = "idmarca";
 
-$tituloWeb = "Gestión: Talleres";
+$tituloWeb = "Gestión: Vinoteca";
 //////////////////////// Fin opciones ////////////////////////////////////////////////
 
 

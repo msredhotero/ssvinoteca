@@ -41,7 +41,7 @@ $modificar = "modificarPagos";
 
 $idTabla = "idpago";
 
-$tituloWeb = "Gestión: Libreria";
+$tituloWeb = "Gestión: Vinoteca";
 //////////////////////// Fin opciones ////////////////////////////////////////////////
 
 

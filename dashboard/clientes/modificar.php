@@ -41,7 +41,7 @@ $modificar = "modificarClientes";
 
 $idTabla = "idcliente";
 
-$tituloWeb = "Gestión: Libreria";
+$tituloWeb = "Gestión: Vinoteca";
 //////////////////////// Fin opciones ////////////////////////////////////////////////
 
 

@@ -34,7 +34,7 @@ $eliminar = "eliminarConfiguracion";
 
 $insertar = "insertarConfiguracion";
 
-$tituloWeb = "Gestión: Libreria";
+$tituloWeb = "Gestión: Vinoteca";
 //////////////////////// Fin opciones ////////////////////////////////////////////////
 
 

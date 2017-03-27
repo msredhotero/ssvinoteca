@@ -39,7 +39,7 @@ $resMenu = $serviciosHTML->menu(utf8_encode($_SESSION['nombre_predio']),"Reporte
 
 
 
-<title>Gesti&oacute;n: Libreria</title>
+<title>Gesti&oacute;n: Vinoteca</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 

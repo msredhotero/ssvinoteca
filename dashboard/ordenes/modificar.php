@@ -41,7 +41,7 @@ $modificar = "modificarOrdenes";
 
 $idTabla = "idorden";
 
-$tituloWeb = "Gestión: Talleres";
+$tituloWeb = "Gestión: Vinoteca";
 //////////////////////// Fin opciones ////////////////////////////////////////////////
 
 

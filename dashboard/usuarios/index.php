@@ -89,7 +89,7 @@ if ($_SESSION['idroll_predio'] != 1) {
 
 
 
-<title>Gestión: Talleres</title>
+<title>Gestión: Vinoteca</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 

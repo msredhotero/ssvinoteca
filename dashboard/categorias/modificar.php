@@ -41,7 +41,7 @@ $modificar = "modificarCategorias";
 
 $idTabla = "idcategoria";
 
-$tituloWeb = "Gestión: Libreria";
+$tituloWeb = "Gestión: Vinoteca";
 //////////////////////// Fin opciones ////////////////////////////////////////////////
 
 

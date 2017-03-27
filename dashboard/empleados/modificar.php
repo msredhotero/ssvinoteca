@@ -41,7 +41,7 @@ $modificar = "modificarEmpleados";
 
 $idTabla = "idempleado";
 
-$tituloWeb = "Gestión: Talleres";
+$tituloWeb = "Gestión: Vinoteca";
 //////////////////////// Fin opciones ////////////////////////////////////////////////
 
 

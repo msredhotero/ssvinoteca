@@ -40,7 +40,7 @@ $modificar = "modificarVentas";
 
 $idTabla = "idventa";
 
-$tituloWeb = "Gestión: Libreria";
+$tituloWeb = "Gestión: Vinoteca";
 //////////////////////// Fin opciones ////////////////////////////////////////////////
 
 
