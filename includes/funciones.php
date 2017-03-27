@@ -325,7 +325,7 @@ class Servicios {
 		$sql	=	"show columns from ".$tabla;
 		$res 	=	$this->query($sql,0);
 		$label  = '';
-		$ocultar = array("fechacrea","fechamodi","usuacrea","usuamodi","tipoimagen","utilidad");
+		$ocultar = array("fechacrea","fechamodi","usuacrea","usuamodi","tipoimagen","utilidad","refviejo");
 		
 		$geoposicionamiento = array("latitud","longitud");
 		
@@ -712,7 +712,7 @@ class Servicios {
 		$sql	=	"show columns from ".$tabla;
 		$res 	=	$this->query($sql,0);
 		
-		$ocultar = array("fechacrea","fechamodi","usuacrea","usuamodi","tipoimagen","utilidad");
+		$ocultar = array("fechacrea","fechamodi","usuacrea","usuamodi","tipoimagen","utilidad","refviejo");
 		
 		$camposEscondido = "";
 		/* Analizar para despues */

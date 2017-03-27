@@ -264,7 +264,7 @@ if ($_SESSION['refroll_predio'] != 1) {
                 </div>
                 
                 
-                <div class="form-group col-md-6" style="display:block">
+                <div class="form-group col-md-5" style="display:block">
                 	<label class="control-label" for="codigobarra" style="text-align:left">Seleccione el Cliente</label>
                     <div class="input-group col-md-12">
 	                    <select data-placeholder="selecione el Cliente..." id="refclientes" name="refclientes" class="chosen-select" tabindex="2" style="width:100%;">
@@ -274,13 +274,20 @@ if ($_SESSION['refroll_predio'] != 1) {
                     </div>
                 </div>
                 
-                <div class="form-group col-md-6" style="display:block">
+                <div class="form-group col-md-5" style="display:block">
                 	<label class="control-label" for="codigobarra" style="text-align:left">Seleccione el Tipo Pago</label>
                     <div class="input-group col-md-12">
 	                    <select data-placeholder="selecione el Tipo de Pago..." id="reftipopago" name="reftipopago" class="chosen-select" tabindex="2" style="width:100%;">
                             
                             <?php echo $lstTipoPago; ?>
                         </select>
+                    </div>
+                </div>
+                
+                <div class="form-group col-md-2" style="display:block">
+                	<label class="control-label" for="codigobarra" style="text-align:left">Descuento</label>
+                    <div class="input-group col-md-12">
+	                    <input id="descuento" class="form-control" name="descuento" placeholder="Cantidad..." required type="number" value="0">
                     </div>
                 </div>
                 
@@ -305,10 +312,18 @@ if ($_SESSION['refroll_predio'] != 1) {
                 <tfoot>
                     <tr style="background-color:#CCC; font-weight:bold; font-size:18px;">
                         <td colspan="5" align="right">
-                            Total $
+                            Sub-Total $
                         </td>
                         <td>
                             <input type="text" readonly name="total" id="total" value="0" style="border:none; background-color:#CCC;"/>
+                        </td>
+                    </tr>
+                    <tr style="background-color:#DDD; font-weight:bold; font-size:18px;">
+                        <td colspan="5" align="right">
+                            Total - Descuento $
+                        </td>
+                        <td>
+                            <input type="text" readonly name="totaldescuento" id="totaldescuento" value="0" style="border:none; background-color:#DDD;"/>
                         </td>
                     </tr>
                 </tfoot>
@@ -785,9 +800,16 @@ $(document).ready(function(){
 			
 			suma += parseFloat($(this).find('td').eq(4).text()||0,10); //numero de la celda 3
 		})
+		
+		$('#totaldescuento').val((parseFloat(suma) - parseFloat($('#descuento').val())).toFixed(2));
+		
 		return suma.toFixed(2);
 
 	  }
+	  
+	  $('#descuento').change(function() {
+		  $('#totaldescuento').val((parseFloat(SumarTabla()) - parseFloat($('#descuento').val())).toFixed(2));
+	  });
 	  
 	//elimina una fila
 	  $(document).on("click",".eliminarfila",function(){

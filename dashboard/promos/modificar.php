@@ -22,38 +22,38 @@ $serviciosReferencias 	= new ServiciosReferencias();
 $fecha = date('Y-m-d');
 
 //$resProductos = $serviciosProductos->traerProductosLimite(6);
-$resMenu = $serviciosHTML->menu(utf8_encode($_SESSION['nombre_predio']),"Empleados",$_SESSION['refroll_predio'],'');
+$resMenu = $serviciosHTML->menu(utf8_encode($_SESSION['nombre_predio']),"Promos",$_SESSION['refroll_predio'],'');
 
 
 $id = $_GET['id'];
 
-$resResultado = $serviciosReferencias->traerEmpleadosPorId($id);
+$resResultado = $serviciosReferencias->traerPromosPorId($id);
 
 
 /////////////////////// Opciones pagina ///////////////////////////////////////////////
-$singular = "Empleado";
+$singular = "Promoción";
 
-$plural = "Empleados";
+$plural = "Promociones";
 
-$eliminar = "eliminarEmpleados";
+$eliminar = "eliminarPromos";
 
-$modificar = "modificarEmpleados";
+$modificar = "modificarPromos";
 
-$idTabla = "idempleado";
+$idTabla = "idpromo";
 
-$tituloWeb = "Gestión: Talleres";
+$tituloWeb = "Gestión: Vinoteca";
 //////////////////////// Fin opciones ////////////////////////////////////////////////
 
 
 /////////////////////// Opciones para la creacion del formulario  /////////////////////
-$tabla 			= "dbempleados";
+$tabla 			= "dbpromos";
 
-$lblCambio	 	= array("dni","fechanac","telefono","direccion","fechaing");
-$lblreemplazo	= array("Nro Documento","Fecha Nacimiento","Teléfono","dirección","Fecha Ingreso");
+$lblCambio	 	= array("vigenciadesde","vigenciahasta");
+$lblreemplazo	= array("Vig. Desde","Vig. Hasta");
 
 
-$cadRef 	= '';
-
+$cadRef 	= ''; 
+    
 $refdescripcion = array();
 $refCampo 	=  array();
 //////////////////////////////////////////////  FIN de los opciones //////////////////////////

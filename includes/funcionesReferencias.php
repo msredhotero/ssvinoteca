@@ -400,6 +400,26 @@ return $res;
 } 
 
 
+function traerPromodetallePorPromo($idPromo) { 
+$sql = "select 
+p.idpromodetalle,
+pro.nombre as promo,
+prod.nombre as producto,
+p.cantidad,
+p.refpromos,
+p.refproductos
+
+from dbpromodetalle p 
+inner join dbpromos pro ON pro.idpromo = p.refpromos 
+inner join dbproductos prod ON prod.idproducto = p.refproductos 
+where	pro.idpromo = ".$idPromo."
+order by 1"; 
+$res = $this->query($sql,0); 
+return $res; 
+} 
+
+
+
 function traerPromodetallePorId($id) { 
 $sql = "select idpromodetalle,refpromos,refproductos,cantidad from dbpromodetalle where idpromodetalle =".$id; 
 $res = $this->query($sql,0); 

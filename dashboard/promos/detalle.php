@@ -64,6 +64,15 @@ $refCampo 	=  array("refpromos","refproductos");
 
 $formulario 	= $serviciosFunciones->camposTabla($insertar ,$tabla,$lblCambio,$lblreemplazo,$refdescripcion,$refCampo);
 
+/////////////////////// Opciones para la creacion del view  apellido,nombre,nrodocumento,fechanacimiento,direccion,telefono,email/////////////////////
+$cabeceras 		= "	<th>Promo</th>
+                    <th>Productos</th>
+                    <th>Cantidad</th>";
+
+//////////////////////////////////////////////  FIN de los opciones //////////////////////////
+
+
+$lstCargados 	= $serviciosFunciones->camposTablaView($cabeceras,$serviciosReferencias->traerPromodetallePorPromo($id),3);
 
 if ($_SESSION['refroll_predio'] != 1) {
 
@@ -168,6 +177,16 @@ if ($_SESSION['refroll_predio'] != 1) {
                 </div>
             </div>
             </form>
+    	</div>
+    </div>
+    
+    <div class="boxInfoLargo">
+        <div id="headBoxInfo">
+        	<p style="color: #fff; font-size:18px; height:16px;"><?php echo $plural; ?> Cargados</p>
+        	
+        </div>
+    	<div class="cuerpoBox">
+        	<?php echo $lstCargados; ?>
     	</div>
     </div>
     
@@ -292,7 +311,7 @@ $(document).ready(function(){
                                             $(".alert").removeClass("alert-danger");
 											$(".alert").removeClass("alert-info");
                                             $(".alert").addClass("alert-success");
-                                            $(".alert").html('<strong>Ok!</strong> Se modifico exitosamente el <strong><?php echo $singular; ?></strong>. ');
+                                            $(".alert").html('<strong>Ok!</strong> Se cargo exitosamente el <strong>el producto a la promoción</strong>. ');
 											$(".alert").delay(3000).queue(function(){
 												/*aca lo que quiero hacer 
 												  después de los 2 segundos de retraso*/
@@ -300,8 +319,8 @@ $(document).ready(function(){
 												
 											});
 											$("#load").html('');
-											//url = "index.php";
-											//$(location).attr('href',url);
+											url = "detalle.php?id="+<?php echo $id; ?>;
+											$(location).attr('href',url);
                                             
 											
                                         } else {
