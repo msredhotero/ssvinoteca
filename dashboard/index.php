@@ -114,7 +114,7 @@ $lstVentas	= $serviciosFunciones->camposTablaView($cabeceras2, $serviciosReferen
 
 
 
-<title>Gesti&oacute;n: Libreria</title>
+<title>Gesti&oacute;n: Vinoteca</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 
@@ -243,7 +243,7 @@ $lstVentas	= $serviciosFunciones->camposTablaView($cabeceras2, $serviciosReferen
                     </div>
                     <div class="col-md-6">
                     	<div class="form-group col-md-12" style="display:block">
-                            <label class="control-label" for="codigobarra" style="text-align:left">Buscar Compras y Pagos | Pagar | Libros</label>
+                            <label class="control-label" for="codigobarra" style="text-align:left">Buscar Compras y Pagos | Pagar </label>
                             <div class="input-group col-md-12">
                                 <ul class="list-inline">
                                 	<li>

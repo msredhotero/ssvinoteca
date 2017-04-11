@@ -48,15 +48,18 @@ $tituloWeb = "Gestión: Vinoteca";
 /////////////////////// Opciones para la creacion del formulario  /////////////////////
 $tabla 			= "dbproductos";
 
-$lblCambio	 	= array("codigobarra","stockmin","preciocosto","precioventa","refcategorias");
-$lblreemplazo	= array("Cod. Barra","Stock Minimo","Precio Costo","Precio Venta","Categoria");
+$lblCambio	 	= array("codigobarra","stockmin","preciocosto","precioventa","preciodescuento","refcategorias","refproveedores");
+$lblreemplazo	= array("Cod. Barra","Stock Minimo","Precio Costo","Precio Venta","Precio + de 2 articulos","Uvas","Proveedores");
 
 
 $resCategorias 	= $serviciosReferencias->traerCategorias();
 $cadRef 	= $serviciosFunciones->devolverSelectBoxActivo($resCategorias,array(1),'',mysql_result($resResultado,0,'refcategorias'));
+
+$resProveedores	= $serviciosReferencias->traerProveedores();
+$cadRef2 	= $serviciosFunciones->devolverSelectBoxActivo($resProveedores,array(1),'',mysql_result($resResultado,0,'refproveedores'));
     
-$refdescripcion = array(0 => $cadRef);
-$refCampo 	=  array("refcategorias");
+$refdescripcion = array(0 => $cadRef, 1=>$cadRef2);
+$refCampo 	=  array("refcategorias","refproveedores");
 //////////////////////////////////////////////  FIN de los opciones //////////////////////////
 
 

@@ -22,7 +22,7 @@ $serviciosReferencias 	= new ServiciosReferencias();
 $fecha = date('Y-m-d');
 
 //$resProductos = $serviciosProductos->traerProductosLimite(6);
-$resMenu = $serviciosHTML->menu(utf8_encode($_SESSION['nombre_predio']),"Categorias",$_SESSION['refroll_predio'],'');
+$resMenu = $serviciosHTML->menu(utf8_encode($_SESSION['nombre_predio']),"Uvas",$_SESSION['refroll_predio'],'');
 
 
 $id = $_GET['id'];
@@ -31,9 +31,9 @@ $resResultado = $serviciosReferencias->traerClientesPorId($id);
 
 
 /////////////////////// Opciones pagina ///////////////////////////////////////////////
-$singular = "Categoria";
+$singular = "Uva";
 
-$plural = "Categorias";
+$plural = "Uvas";
 
 $eliminar = "eliminarCategorias";
 
@@ -48,8 +48,8 @@ $tituloWeb = "Gestión: Vinoteca";
 /////////////////////// Opciones para la creacion del formulario  /////////////////////
 $tabla 			= "tbcategorias";
 
-$lblCambio	 	= array();
-$lblreemplazo	= array();
+$lblCambio	 	= array("esegreso");
+$lblreemplazo	= array("Es Egreso");
 
 
 $cadRef 	= '';

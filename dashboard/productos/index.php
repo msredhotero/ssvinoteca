@@ -43,15 +43,18 @@ $tabla 			= "dbproductos";
 
 $codigo			= $serviciosReferencias->generarCodigo();
 
-$lblCambio	 	= array("codigobarra","stockmin","preciocosto","precioventa","refcategorias");
-$lblreemplazo	= array("Cod. Barra","Stock Minimo","Precio Costo","Precio Venta","Categoria");
+$lblCambio	 	= array("codigobarra","stockmin","preciocosto","precioventa","preciodescuento","refcategorias","refproveedores");
+$lblreemplazo	= array("Cod. Barra","Stock Minimo","Precio Costo","Precio Venta","Precio + de 2 articulos","Uvas","Proveedores");
 
 
 $resCategorias 	= $serviciosReferencias->traerCategorias();
 $cadRef 	= $serviciosFunciones->devolverSelectBox($resCategorias,array(1),'');
 
-$refdescripcion = array(0 => $cadRef);
-$refCampo 	=  array("refcategorias");
+$resProveedores	= $serviciosReferencias->traerProveedores();
+$cadRef2 	= $serviciosFunciones->devolverSelectBox($resProveedores,array(1),'');
+
+$refdescripcion = array(0 => $cadRef, 1=>$cadRef2);
+$refCampo 	=  array("refcategorias","refproveedores");
 //////////////////////////////////////////////  FIN de los opciones //////////////////////////
 
 

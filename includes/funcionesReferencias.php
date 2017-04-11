@@ -644,21 +644,19 @@ function traerCantidadVentas($fecha) {
 	return $res; 	
 }
 
-function insertarProductos($codigo,$codigobarra,$nombre,$descripcion,$stock,$stockmin,$preciocosto,$precioventa,$utilidad,$estado,$imagen,$refcategorias,$tipoimagen,$unidades) { 
-$sql = "insert into dbproductos(idproducto,codigo,codigobarra,nombre,descripcion,stock,stockmin,preciocosto,precioventa,utilidad,estado,imagen,refcategorias,tipoimagen,unidades, activo) 
-values ('','".utf8_decode($codigo)."','".utf8_decode($codigobarra)."','".utf8_decode($nombre)."','".utf8_decode($descripcion)."',".($stock=='' ? 0 : $stock).",".($stockmin == '' ? 0 : $stockmin).",".($preciocosto == '' ?  0 : $preciocosto).",".($precioventa == '' ? 0 : $precioventa).",".$utilidad.",'".utf8_decode($estado)."','".utf8_decode($imagen)."',".$refcategorias.",'".utf8_decode($tipoimagen)."',".($unidades=='' ? 1 : $unidades).",1)";
+function insertarProductos($codigo,$codigobarra,$nombre,$descripcion,$stock,$stockmin,$preciocosto,$precioventa,$preciodescuento,$utilidad,$imagen,$refcategorias,$tipoimagen,$unidades,$refproveedores) { 
+$sql = "insert into dbproductos(idproducto,codigo,codigobarra,nombre,descripcion,stock,stockmin,preciocosto,precioventa,preciodescuento,utilidad,imagen,refcategorias,tipoimagen,unidades, activo,refproveedores) 
+values ('','".utf8_decode($codigo)."','".utf8_decode($codigobarra)."','".utf8_decode($nombre)."','".utf8_decode($descripcion)."',".($stock=='' ? 0 : $stock).",".($stockmin == '' ? 0 : $stockmin).",".($preciocosto == '' ?  0 : $preciocosto).",".($precioventa == '' ? 0 : $precioventa).",".($preciodescuento == '' ? 0 : $preciodescuento).",".$utilidad.",'".utf8_decode($imagen)."',".$refcategorias.",'".utf8_decode($tipoimagen)."',".($unidades=='' ? 1 : $unidades).",1,".$refproveedores.")"; 
 $res = $this->query($sql,1); 
-
-$this->insertarAudit('dbproductos',$res,"('','".utf8_decode($codigo)."','".utf8_decode($codigobarra)."','".utf8_decode($nombre)."','".utf8_decode($descripcion)."',".($stock=='' ? 0 : $stock).",".($stockmin == '' ? 0 : $stockmin).",".($preciocosto == '' ?  0 : $preciocosto).",".($precioventa == '' ? 0 : $precioventa).",".$utilidad.",'".utf8_decode($estado)."','".utf8_decode($imagen)."',".$refcategorias.",'".utf8_decode($tipoimagen)."',".($unidades=='' ? 1 : $unidades).",1)",'','',date('Y-m-d'),'administrador','Insertar');
 
 return $res; 
 } 
 
 
-function modificarProductos($id,$codigo,$codigobarra,$nombre,$descripcion,$stock,$stockmin,$preciocosto,$precioventa,$utilidad,$estado,$imagen,$refcategorias,$tipoimagen,$unidades,$activo) { 
+function modificarProductos($id,$codigo,$codigobarra,$nombre,$descripcion,$stock,$stockmin,$preciocosto,$precioventa,$preciodescuento,$utilidad,$imagen,$refcategorias,$tipoimagen,$unidades,$activo,$refproveedores) { 
 $sql = "update dbproductos 
 set 
-codigo = '".utf8_decode($codigo)."',codigobarra = '".utf8_decode($codigobarra)."',nombre = '".utf8_decode($nombre)."',descripcion = '".utf8_decode($descripcion)."',stock = ".$stock.",stockmin = ".$stockmin.",preciocosto = ".$preciocosto.",precioventa = ".$precioventa.",utilidad = ".$utilidad.",estado = '".utf8_decode($estado)."',imagen = '".utf8_decode($imagen)."',refcategorias = ".$refcategorias.",tipoimagen = '".utf8_decode($tipoimagen)."', unidades = ".($unidades=='' ? 1 : $unidades).",activo = ".$activo." 
+codigo = '".utf8_decode($codigo)."',codigobarra = '".utf8_decode($codigobarra)."',nombre = '".utf8_decode($nombre)."',descripcion = '".utf8_decode($descripcion)."',stock = ".$stock.",stockmin = ".$stockmin.",preciocosto = ".$preciocosto.",precioventa = ".$precioventa.",preciodescuento = ".$preciodescuento.",utilidad = ".$utilidad.",imagen = '".utf8_decode($imagen)."',refcategorias = ".$refcategorias.",tipoimagen = '".utf8_decode($tipoimagen)."', unidades = ".($unidades=='' ? 1 : $unidades).",activo = ".$activo.",refproveedores = ".$refproveedores."  
 where idproducto =".$id; 
 $res = $this->query($sql,0);
 
@@ -699,17 +697,19 @@ p.descripcion,
 p.stock,
 p.stockmin,
 p.precioventa,
-
+p.preciodescuento,
 p.imagen,
 cat.descripcion,
 p.unidades,
 p.refcategorias,
-p.estado,
+
 p.utilidad,
 p.preciocosto,
+prov.nombre as proveedor,
 p.tipoimagen
 from dbproductos p 
 inner join tbcategorias cat ON cat.idcategoria = p.refcategorias 
+inner join dbproveedores prov ON prov.idproveedor = p.refproveedores 
 where p.activo = 1 and cat.activo = 1
 order by p.nombre"; 
 $res = $this->query($sql,0); 
@@ -724,17 +724,19 @@ p.stock as cantidad,
 (p.stock / p.unidades) as stock,
 p.stockmin,
 p.precioventa,
-
+p.preciodescuento,
 p.imagen,
 cat.descripcion,
 p.unidades,
 p.refcategorias,
-p.estado,
+
 p.utilidad,
 p.preciocosto,
+prov.nombre as proveedor,
 p.tipoimagen
 from dbproductos p 
 inner join tbcategorias cat ON cat.idcategoria = p.refcategorias 
+inner join dbproveedores prov ON prov.idproveedor = p.refproveedores 
 where p.activo = 1 and cat.activo = 1
 order by 1
 limit 100"; 
@@ -753,17 +755,19 @@ p.descripcion,
 p.stock,
 p.stockmin,
 p.precioventa,
-
+p.preciodescuento,
 p.imagen,
 cat.descripcion,
 p.unidades,
 p.refcategorias,
-p.estado,
+
 p.utilidad,
 p.preciocosto,
+prov.nombre as proveedor,
 p.tipoimagen
 from dbproductos p 
 inner join tbcategorias cat ON cat.idcategoria = p.refcategorias 
+inner join dbproveedores prov ON prov.idproveedor = p.refproveedores 
 where p.activo = 1 and cat.idcategoria = ".$categoria." and cat.activo = 1
 order by p.nombre"; 
 $res = $this->query($sql,0); 
@@ -780,18 +784,20 @@ function buscarProductos($tipobusqueda,$busqueda) {
 							p.precioventa,
 							p.stock,
 							p.stockmin,
-							
+							p.preciodescuento,
 							
 							p.imagen,
 							cat.descripcion,
 							p.unidades,
 							p.refcategorias,
-							p.estado,
+							
 							p.utilidad,
 							p.preciocosto,
+							prov.nombre as proveedor,
 							p.tipoimagen
 						from dbproductos p 
 						inner join tbcategorias cat ON cat.idcategoria = p.refcategorias 
+						inner join dbproveedores prov ON prov.idproveedor = p.refproveedores 
 						where p.activo = 1 and p.nombre like '%".$busqueda."%' and cat.activo = 1
 						order by p.nombre
 						limit 100";
@@ -804,17 +810,20 @@ function buscarProductos($tipobusqueda,$busqueda) {
 							p.precioventa,
 							p.stock,
 							p.stockmin,
-
+							p.preciodescuento,
+							
 							p.imagen,
 							cat.descripcion,
 							p.unidades,
 							p.refcategorias,
-							p.estado,
+							
 							p.utilidad,
 							p.preciocosto,
+							prov.nombre as proveedor,
 							p.tipoimagen
 						from dbproductos p 
 						inner join tbcategorias cat ON cat.idcategoria = p.refcategorias 
+						inner join dbproveedores prov ON prov.idproveedor = p.refproveedores 
 						where p.activo = 1 and p.codigobarra = '".$busqueda."' and cat.activo = 1
 						order by p.nombre
 						limit 100";
@@ -827,18 +836,47 @@ function buscarProductos($tipobusqueda,$busqueda) {
 							p.precioventa,
 							p.stock,
 							p.stockmin,
+							p.preciodescuento,
 							
 							p.imagen,
 							cat.descripcion,
 							p.unidades,
 							p.refcategorias,
-							p.estado,
+							
 							p.utilidad,
 							p.preciocosto,
+							prov.nombre as proveedor,
 							p.tipoimagen
 						from dbproductos p 
 						inner join tbcategorias cat ON cat.idcategoria = p.refcategorias 
+						inner join dbproveedores prov ON prov.idproveedor = p.refproveedores
 						where p.activo = 1 and p.codigo like '%".$busqueda."%' and cat.activo = 1
+						order by p.nombre
+						limit 100";
+				break;
+			case '4':
+				$sql = "select 
+							p.idproducto,
+							p.nombre,
+							p.codigobarra,
+							p.precioventa,
+							p.stock,
+							p.stockmin,
+							p.preciodescuento,
+							
+							p.imagen,
+							cat.descripcion,
+							p.unidades,
+							p.refcategorias,
+							
+							p.utilidad,
+							p.preciocosto,
+							prov.nombre as proveedor,
+							p.tipoimagen
+						from dbproductos p 
+						inner join tbcategorias cat ON cat.idcategoria = p.refcategorias 
+						inner join dbproveedores prov ON prov.idproveedor = p.refproveedores
+						where p.activo = 1 and prov.nombre like '%".$busqueda."%' and cat.activo = 1
 						order by p.nombre
 						limit 100";
 				break;
@@ -871,13 +909,14 @@ p.nombre,
 p.stock,
 p.stockmin,
 p.preciocosto,
+prov.nombre as proveedor,
 
 p.precioventa,
+p.preciodescuento,
 p.imagen,
 cat.descripcion,
 p.unidades,
 p.refcategorias,
-p.estado,
 p.utilidad,
 
 p.codigo,
@@ -886,6 +925,7 @@ p.descripcion,
 p.tipoimagen
 from dbproductos p 
 inner join tbcategorias cat ON cat.idcategoria = p.refcategorias 
+inner join dbproveedores prov ON prov.idproveedor = p.refproveedores
 where p.stockmin >= p.stock and p.activo = 1 and cat.activo = 1
 order by nombre"; 
 $res = $this->query($sql,0); 
@@ -894,13 +934,13 @@ return $res;
 
 
 function traerProductosPorId($id) { 
-$sql = "select idproducto,codigo,codigobarra,nombre,descripcion,stock,stockmin,preciocosto,precioventa,utilidad,estado,imagen,refcategorias,tipoimagen, (case when activo=1 then '1' else '0' end) as activo from dbproductos where idproducto =".$id; 
+$sql = "select idproducto,codigo,codigobarra,nombre,descripcion,stock,stockmin,preciocosto,precioventa,preciodescuento,utilidad,imagen,refcategorias,tipoimagen, (case when activo=1 then '1' else '0' end) as activo,refproveedores from dbproductos where idproducto =".$id; 
 $res = $this->query($sql,0); 
 return $res; 
 } 
 
 function traerProductoPorCodigoBarra($id) { 
-$sql = "select idproducto,codigo,codigobarra,nombre,descripcion,stock,stockmin,preciocosto,precioventa,utilidad,estado,imagen,refcategorias,tipoimagen, (case when activo=1 then '1' else '0' end) as activo from dbproductos where activo=1 and codigobarra ='".$id."'"; 
+$sql = "select idproducto,codigo,codigobarra,nombre,descripcion,stock,stockmin,preciocosto,precioventa,preciodescuento,utilidad,imagen,refcategorias,tipoimagen, (case when activo=1 then '1' else '0' end) as activo,refproveedores from dbproductos where activo=1 and codigobarra ='".$id."'"; 
 $res = $this->query($sql,0); 
 return $res; 
 }
