@@ -1698,14 +1698,36 @@ $res = $this->query($sql,0);
 return $res;
 }
 
+
+function traerCarritoPorVenta($id) {
+$sql = "select 
+				d.iddetalleventa,
+				pro.nombre as producto,
+				d.cantidad,
+				d.precio,
+				d.total,
+				d.nombre,
+				d.costo,
+				d.refventas,
+				d.refproductos,
+				pro.preciodescuento
+	from dbdetalleventas d
+	inner join dbventas ven ON ven.idventa = d.refventas
+	inner join tbtipopago ti ON ti.idtipopago = ven.reftipopago
+	inner join dbproductos pro ON pro.idproducto = d.refproductos
+ where refventas =".$id;
+$res = $this->query($sql,0);
+return $res;
+}
+
 /* Fin */
 /* /* Fin de la Tabla: dbdetalleventas*/
 /* Fin */
 /* PARA Ventas */
 
-function insertarVentas($reftipopago,$numero,$fecha,$total,$usuario,$cancelado,$refclientes) {
-$sql = "insert into dbventas(idventa,reftipopago,numero,fecha,total,usuario,cancelado,refclientes)
-values ('',".$reftipopago.",'".utf8_decode($numero)."','".utf8_decode($fecha)."',".$total.",'".utf8_decode($usuario)."',".$cancelado.",".$refclientes.")";
+function insertarVentas($reftipopago,$numero,$fecha,$total,$usuario,$cancelado,$refclientes,$descuento) {
+$sql = "insert into dbventas(idventa,reftipopago,numero,fecha,total,usuario,cancelado,refclientes,descuento)
+values ('',".$reftipopago.",'".utf8_decode($numero)."','".utf8_decode($fecha)."',".$total.",'".utf8_decode($usuario)."',".$cancelado.",".$refclientes.",".$descuento.")";
 $res = $this->query($sql,1);
 return $res;
 }
@@ -2042,7 +2064,7 @@ return $res;
 }
 
 function traerVentasPorId($id) {
-$sql = "select idventa,reftipopago,numero,fecha,total,usuario,(case when cancelado = 1 then 'Si' else 'No' end) as cancelado,refclientes from dbventas where idventa =".$id;
+$sql = "select idventa,reftipopago,numero,fecha,total,usuario,(case when cancelado = 1 then 'Si' else 'No' end) as cancelado,descuento,refclientes from dbventas where idventa =".$id;
 $res = $this->query($sql,0);
 return $res;
 }

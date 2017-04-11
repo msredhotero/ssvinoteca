@@ -524,12 +524,13 @@ function insertarVentas($serviciosReferencias) {
 	$fecha = date('Y-m-d');
 	$total = $_POST['total'];
 	$usuario = $_POST['usuario'];
+	$descuento = $_POST['descuento'];
 
 	$cancelado = 0;
 
 	$refclientes = $_POST['refclientes'];
 	
-	$res = $serviciosReferencias->insertarVentas($reftipopago,$numero,$fecha,$total,$usuario,$cancelado,$refclientes);
+	$res = $serviciosReferencias->insertarVentas($reftipopago,$numero,$fecha,$total,$usuario,$cancelado,$refclientes,$descuento);
 	
 	$numero = count($_POST);
 	$tags = array_keys($_POST);// obtiene los nombres de las varibles
@@ -555,7 +556,7 @@ function insertarVentas($serviciosReferencias) {
 			}
 		}
 		
-		echo '';
+		echo $res;
 	} else {
 		echo 'Huvo un error al insertar datos';
 	}
@@ -1073,11 +1074,12 @@ $stockmin = $_POST['stockmin'];
 $preciocosto = $_POST['preciocosto']; 
 $precioventa = $_POST['precioventa']; 
 $utilidad = $precioventa - $preciocosto; 
-$estado = $_POST['estado']; 
+$preciodescuento = $_POST['preciodescuento']; 
 $imagen = ''; 
 $refcategorias = $_POST['refcategorias']; 
 $tipoimagen = ''; 
 $unidades = $_POST['unidades']; 
+$refproveedores = $_POST['refproveedores']; 
 	
 	$existeCodigo = $serviciosReferencias->existeCodigo($codigo);
 	
@@ -1085,7 +1087,7 @@ $unidades = $_POST['unidades'];
 		$codigo = $serviciosReferencias->generarCodigo();	
 	}
 	
-	$res = $serviciosReferencias->insertarProductos($codigo,$codigobarra,$nombre,$descripcion,$stock,$stockmin,$preciocosto,$precioventa,$utilidad,$estado,$imagen,$refcategorias,$tipoimagen,$unidades); 
+	$res = $serviciosReferencias->insertarProductos($codigo,$codigobarra,$nombre,$descripcion,$stock,$stockmin,$preciocosto,$precioventa,$preciodescuento,$utilidad,$imagen,$refcategorias,$tipoimagen,$unidades,$refproveedores); 
 	
 	if ((integer)$res > 0) { 
 		$imagenes = array("imagen" => 'imagen');
@@ -1109,18 +1111,19 @@ $stockmin = $_POST['stockmin'];
 $preciocosto = $_POST['preciocosto']; 
 $precioventa = $_POST['precioventa']; 
 $utilidad = $precioventa - $preciocosto; 
-$estado = $_POST['estado']; 
+$preciodescuento = $_POST['preciodescuento'];
 $imagen = ''; 
 $refcategorias = $_POST['refcategorias']; 
 $tipoimagen = ''; 
 $unidades = $_POST['unidades'];
+$refproveedores = $_POST['refproveedores']; 
 if (isset($_POST['activo'])) {
 $activo = 1;
 } else {
 $activo = 0;
 } 
 	
-	$res = $serviciosReferencias->modificarProductos($id,$codigo,$codigobarra,$nombre,$descripcion,$stock,$stockmin,$preciocosto,$precioventa,$utilidad,$estado,$imagen,$refcategorias,$tipoimagen,$unidades,$activo); 
+	$res = $serviciosReferencias->modificarProductos($id,$codigo,$codigobarra,$nombre,$descripcion,$stock,$stockmin,$preciocosto,$precioventa,$preciodescuento,$utilidad,$imagen,$refcategorias,$tipoimagen,$unidades,$activo,$refproveedores); 
 	
 	if ($res == true) { 
 		$imagenes = array("imagen" => 'imagen');

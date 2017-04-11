@@ -845,14 +845,14 @@ $(document).ready(function(){
 				//una vez finalizado correctamente
 				success: function(data){
 
-					if (data == '') {
+					if (!isNaN(data)) {
 						$(".alert").removeClass("alert-danger");
 						$(".alert").removeClass("alert-info");
 						$(".alert").addClass("alert-success");
 						$(".alert").html('<strong>Ok!</strong> Se cargo exitosamente la <strong><?php echo $singular; ?></strong>. ');
 
 						$("#load").html('');
-						url = "index.php";
+						url = "carrito.php?id="+data;
 						$(location).attr('href',url);
 						
 						
