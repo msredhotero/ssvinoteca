@@ -102,7 +102,7 @@ $resMenu = $serviciosHTML->menu(utf8_encode($_SESSION['nombre_predio']),"Reporte
                     <div class="input-group col-md-6 col-xs-12">
                     <select class="form-control" id="anio" name="anio">
                     	<?php 
-                        	for ($i=2000;$i<=(integer)date('Y');$i++) {
+                        	for ($i=2017;$i<=(integer)date('Y');$i++) {
                         ?>
                     	<option value="<?php echo $i; ?>"><?php echo $i; ?></option>
                         <?php
@@ -121,7 +121,7 @@ $resMenu = $serviciosHTML->menu(utf8_encode($_SESSION['nombre_predio']),"Reporte
                     			<button type="button" class="btn btn-info" id="rptCajaDiaria" style="margin-left:0px;">Caja Mensual</button>
                             </li>
                             <li>
-                    			<button type="button" class="btn btn-info" id="rptCajaDiariaDetalle" style="margin-left:0px;">Consumo de Productos</button>
+                    			<button type="button" class="btn btn-info" id="rptCajaDiariaDetalle" style="margin-left:0px;">Consumo de Uvas</button>
                             </li>
                             <!--<li>
                         		<button type="button" class="btn btn-default" id="rptCJExcel" style="margin-left:0px;">Generar Excel</button>
@@ -132,7 +132,7 @@ $resMenu = $serviciosHTML->menu(utf8_encode($_SESSION['nombre_predio']),"Reporte
                 
                 <div class="form-group col-md-12">
                 	
-                    <h3>Caja Mensual Año: <span class="lblAnio"></span></h3>
+                    <h3>Caja Mensual por Año: <span class="lblAnio"></span></h3>
                     <hr>
                 	<div align="center">
                     <div id="graph"></div>
@@ -142,7 +142,7 @@ $resMenu = $serviciosHTML->menu(utf8_encode($_SESSION['nombre_predio']),"Reporte
                 
                 <div class="form-group col-md-12">
                     
-                    <h3>Consumo Productos Año: <span class="lblAnio2"></span></h3>
+                    <h3>Consumo Uvas por Año: <span class="lblAnio2"></span></h3>
                     <hr>
                     <div align="center">
                     
@@ -205,12 +205,12 @@ $(document).ready(function(){
 						var myarray = [];
 						$('.lblAnio').html($('#anio').val());
 						$.each(json, function(i, item) {
-							if (i != 0) {
+							
 								myarray.push({
 									y: item.nombremes, 
 									a: item.total
 								});	
-							}
+							
 						});
 
 						Morris.Bar({

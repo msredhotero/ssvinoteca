@@ -2108,7 +2108,7 @@ function graficosProductosConsumo($anio) {
 
 	$sql = "select
 			
-				p.idproducto, dv.nombre, coalesce(count(dv.refproductos),0)
+				p.refcategorias, c.descripcion, coalesce(count(c.idcategoria),0)
 		
 					from dbventas v
 					inner join tbtipopago tip ON tip.idtipopago = v.reftipopago
@@ -2117,7 +2117,7 @@ function graficosProductosConsumo($anio) {
 					inner join dbproductos p ON p.idproducto = dv.refproductos
 					inner join tbcategorias c ON c.idcategoria = p.refcategorias
 					where	year(v.fecha) = ".$anio." and c.esegreso = 0 and v.cancelado = 0
-			group by p.idproducto, p.nombre
+			group by p.refcategorias, c.descripcion
 			";
 			
 	$sqlT = "select
