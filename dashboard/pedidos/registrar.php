@@ -57,7 +57,7 @@ if (($refestado == 1) || ($refestado == 2)) {
 	
 } else {
 	$lbl = 'danger';
-	$lblRes = 'El pedido no ha sido procesado, no se puede procesar un pedido finalizado o cancelado';
+	$lblRes = 'El pedido ha sido procesado, no se puede procesar un pedido finalizado o cancelado';
 }
 
 

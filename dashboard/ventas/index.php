@@ -32,7 +32,7 @@ $plural = "Ventas";
 
 $eliminar = "eliminarVentas";
 
-$insertar = "insertarVentas";
+$insertar = "insertarVentasAux";
 
 $tituloWeb = "Gestión: Vinoteca";
 //////////////////////// Fin opciones ////////////////////////////////////////////////
@@ -352,7 +352,7 @@ if ($_SESSION['refroll_predio'] != 1) {
             
             <input type="hidden" name="proNombre" id="proNombre" value="" />
             <input type="hidden" name="proPrecio" id="proPrecio" value="" />
-            <input type="hidden" name="accion" id="accion" value="insertarVentas" />
+            <input type="hidden" name="accion" id="accion" value="insertarVentasAux" />
             <input type="hidden" name="usuario" id="usuario" value="<?php echo utf8_encode($_SESSION['nombre_predio']); ?>" />
             
             </form>

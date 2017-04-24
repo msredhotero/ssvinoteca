@@ -358,6 +358,119 @@ function traerAdministratoMesDia($anio,$mes) {
 
 
 
+/* PARA Detallepreventas */
+
+function insertarDetallepreventas($refventas,$refproductos,$cantidad,$costo,$precio,$total,$nombre) { 
+$sql = "insert into dbdetallepreventas(iddetallepreventa,refventas,refproductos,cantidad,costo,precio,total,nombre) 
+values ('',".$refventas.",".$refproductos.",".$cantidad.",".$costo.",".$precio.",".$total.",'".utf8_decode($nombre)."')"; 
+$res = $this->query($sql,1); 
+return $res; 
+} 
+
+
+function modificarDetallepreventas($id,$refventas,$refproductos,$cantidad,$costo,$precio,$total,$nombre) { 
+$sql = "update dbdetallepreventas 
+set 
+refventas = ".$refventas.",refproductos = ".$refproductos.",cantidad = ".$cantidad.",costo = ".$costo.",precio = ".$precio.",total = ".$total.",nombre = '".utf8_decode($nombre)."' 
+where iddetallepreventa =".$id; 
+$res = $this->query($sql,0); 
+return $res; 
+} 
+
+
+function eliminarDetallepreventas($id) { 
+$sql = "delete from dbdetallepreventas where iddetallepreventa =".$id; 
+$res = $this->query($sql,0); 
+return $res; 
+} 
+
+function eliminarDetallepreventasPorVenta($refventas) { 
+$sql = "delete from dbdetallepreventas where refventas =".$refventas; 
+$res = $this->query($sql,0); 
+return $res; 
+} 
+
+function traerDetallepreventas() { 
+$sql = "select 
+d.iddetallepreventa,
+d.refventas,
+d.refproductos,
+d.cantidad,
+d.costo,
+d.precio,
+d.total,
+d.nombre
+from dbdetallepreventas d 
+order by 1"; 
+$res = $this->query($sql,0); 
+return $res; 
+} 
+
+
+function traerDetallepreventasPorId($id) { 
+$sql = "select iddetallepreventa,refventas,refproductos,cantidad,costo,precio,total,nombre from dbdetallepreventas where iddetallepreventa =".$id; 
+$res = $this->query($sql,0); 
+return $res; 
+} 
+
+/* Fin */
+/* /* Fin de la Tabla: dbdetallepreventas*/
+
+
+/* PARA Ventasaux */
+
+function insertarVentasaux($reftipopago,$numero,$fecha,$total,$usuario,$cancelado,$refclientes,$descuento) { 
+$sql = "insert into dbventasaux(idventaaux,reftipopago,numero,fecha,total,usuario,cancelado,refclientes,descuento) 
+values ('',".$reftipopago.",'".utf8_decode($numero)."','".utf8_decode($fecha)."',".$total.",'".utf8_decode($usuario)."',".$cancelado.",".$refclientes.",".$descuento.")"; 
+$res = $this->query($sql,1); 
+return $res; 
+} 
+
+
+function modificarVentasaux($id,$reftipopago,$numero,$fecha,$total,$usuario,$cancelado,$refclientes,$descuento) { 
+$sql = "update dbventasaux 
+set 
+reftipopago = ".$reftipopago.",numero = '".utf8_decode($numero)."',fecha = '".utf8_decode($fecha)."',total = ".$total.",usuario = '".utf8_decode($usuario)."',cancelado = ".$cancelado.",refclientes = ".$refclientes.",descuento = ".$descuento." 
+where idventaaux =".$id; 
+$res = $this->query($sql,0); 
+return $res; 
+} 
+
+
+function eliminarVentasaux($id) { 
+$sql = "delete from dbventasaux where idventaaux =".$id; 
+$res = $this->query($sql,0); 
+return $res; 
+} 
+
+
+function traerVentasaux() { 
+$sql = "select 
+v.idventaaux,
+v.reftipopago,
+v.numero,
+v.fecha,
+v.total,
+v.usuario,
+v.cancelado,
+v.refclientes,
+v.descuento
+from dbventasaux v 
+order by 1"; 
+$res = $this->query($sql,0); 
+return $res; 
+} 
+
+
+function traerVentasauxPorId($id) { 
+$sql = "select idventaaux,reftipopago,numero,fecha,total,usuario,cancelado,refclientes,descuento from dbventasaux where idventaaux =".$id; 
+$res = $this->query($sql,0); 
+return $res; 
+} 
+
+/* Fin */
+/* /* Fin de la Tabla: dbventasaux*/
+
 /* PARA Promodetalle */
 
 function insertarPromodetalle($refpromos,$refproductos,$cantidad) { 
@@ -644,19 +757,19 @@ function traerCantidadVentas($fecha) {
 	return $res; 	
 }
 
-function insertarProductos($codigo,$codigobarra,$nombre,$descripcion,$stock,$stockmin,$preciocosto,$precioventa,$preciodescuento,$utilidad,$imagen,$refcategorias,$tipoimagen,$unidades,$refproveedores) { 
-$sql = "insert into dbproductos(idproducto,codigo,codigobarra,nombre,descripcion,stock,stockmin,preciocosto,precioventa,preciodescuento,utilidad,imagen,refcategorias,tipoimagen,unidades, activo,refproveedores) 
-values ('','".utf8_decode($codigo)."','".utf8_decode($codigobarra)."','".utf8_decode($nombre)."','".utf8_decode($descripcion)."',".($stock=='' ? 0 : $stock).",".($stockmin == '' ? 0 : $stockmin).",".($preciocosto == '' ?  0 : $preciocosto).",".($precioventa == '' ? 0 : $precioventa).",".($preciodescuento == '' ? 0 : $preciodescuento).",".$utilidad.",'".utf8_decode($imagen)."',".$refcategorias.",'".utf8_decode($tipoimagen)."',".($unidades=='' ? 1 : $unidades).",1,".$refproveedores.")"; 
+function insertarProductos($codigo,$codigobarra,$nombre,$descripcion,$stock,$stockmin,$preciocosto,$precioventa,$preciodescuento,$utilidad,$imagen,$refcategorias,$tipoimagen,$unidades,$refproveedores, $deposito) { 
+$sql = "insert into dbproductos(idproducto,codigo,codigobarra,nombre,descripcion,stock,stockmin,preciocosto,precioventa,preciodescuento,utilidad,imagen,refcategorias,tipoimagen,unidades, activo,refproveedores, deposito) 
+values ('','".utf8_decode($codigo)."','".utf8_decode($codigobarra)."','".utf8_decode($nombre)."','".utf8_decode($descripcion)."',".($stock=='' ? 0 : $stock).",".($stockmin == '' ? 0 : $stockmin).",".($preciocosto == '' ?  0 : $preciocosto).",".($precioventa == '' ? 0 : $precioventa).",".($preciodescuento == '' ? 0 : $preciodescuento).",".$utilidad.",'".utf8_decode($imagen)."',".$refcategorias.",'".utf8_decode($tipoimagen)."',".($unidades=='' ? 1 : $unidades).",1,".$refproveedores.",'".utf8_decode($deposito)."')"; 
 $res = $this->query($sql,1); 
 
 return $res; 
 } 
 
 
-function modificarProductos($id,$codigo,$codigobarra,$nombre,$descripcion,$stock,$stockmin,$preciocosto,$precioventa,$preciodescuento,$utilidad,$imagen,$refcategorias,$tipoimagen,$unidades,$activo,$refproveedores) { 
+function modificarProductos($id,$codigo,$codigobarra,$nombre,$descripcion,$stock,$stockmin,$preciocosto,$precioventa,$preciodescuento,$utilidad,$imagen,$refcategorias,$tipoimagen,$unidades,$activo,$refproveedores,$deposito) { 
 $sql = "update dbproductos 
 set 
-codigo = '".utf8_decode($codigo)."',codigobarra = '".utf8_decode($codigobarra)."',nombre = '".utf8_decode($nombre)."',descripcion = '".utf8_decode($descripcion)."',stock = ".$stock.",stockmin = ".$stockmin.",preciocosto = ".$preciocosto.",precioventa = ".$precioventa.",preciodescuento = ".$preciodescuento.",utilidad = ".$utilidad.",imagen = '".utf8_decode($imagen)."',refcategorias = ".$refcategorias.",tipoimagen = '".utf8_decode($tipoimagen)."', unidades = ".($unidades=='' ? 1 : $unidades).",activo = ".$activo.",refproveedores = ".$refproveedores."  
+codigo = '".utf8_decode($codigo)."',codigobarra = '".utf8_decode($codigobarra)."',nombre = '".utf8_decode($nombre)."',descripcion = '".utf8_decode($descripcion)."',stock = ".$stock.",stockmin = ".$stockmin.",preciocosto = ".$preciocosto.",precioventa = ".$precioventa.",preciodescuento = ".$preciodescuento.",utilidad = ".$utilidad.",imagen = '".utf8_decode($imagen)."',refcategorias = ".$refcategorias.",tipoimagen = '".utf8_decode($tipoimagen)."', unidades = ".($unidades=='' ? 1 : $unidades).",activo = ".$activo.",refproveedores = ".$refproveedores."  ,deposito = '".$deposito."'
 where idproducto =".$id; 
 $res = $this->query($sql,0);
 
@@ -1046,7 +1159,8 @@ p.nombre,
 d.cantidad,
 p.stock,
 p.preciocosto as precio,
-d.total
+d.total,
+p.deposito
 from dbdetallepedidoaux d
 inner
 join	dbproductos p
@@ -1235,7 +1349,8 @@ ped.referencia,
 pro.codigo,
 es.estado,
 es.idestado,
-ped.observacion
+ped.observacion,
+pro.deposito
 from dbdetallepedido d
 inner join dbpedidos ped ON ped.idpedido = d.refpedidos
 inner join tbestados es ON es.idestado = ped.refestados
@@ -1701,7 +1816,7 @@ return $res;
 
 function traerCarritoPorVenta($id) {
 $sql = "select 
-				d.iddetalleventa,
+				d.iddetallepreventa,
 				pro.nombre as producto,
 				d.cantidad,
 				d.precio,
@@ -1711,8 +1826,8 @@ $sql = "select
 				d.refventas,
 				d.refproductos,
 				pro.preciodescuento
-	from dbdetalleventas d
-	inner join dbventas ven ON ven.idventa = d.refventas
+	from dbdetallepreventas d
+	inner join dbventasaux ven ON ven.idventaaux = d.refventas
 	inner join tbtipopago ti ON ti.idtipopago = ven.reftipopago
 	inner join dbproductos pro ON pro.idproducto = d.refproductos
  where refventas =".$id;

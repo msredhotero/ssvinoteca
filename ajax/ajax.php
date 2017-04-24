@@ -284,6 +284,9 @@ break;
 case 'insertarVentas':
 insertarVentas($serviciosReferencias);
 break;
+case 'insertarVentasAux':
+	insertarVentasAux($serviciosReferencias);
+	break;
 case 'modificarVentas':
 modificarVentas($serviciosReferencias);
 break;
@@ -527,10 +530,60 @@ function insertarVentas($serviciosReferencias) {
 	$descuento = $_POST['descuento'];
 
 	$cancelado = 0;
-
+	
+	$aux	=	$_POST['aux'];
+	
 	$refclientes = $_POST['refclientes'];
 	
 	$res = $serviciosReferencias->insertarVentas($reftipopago,$numero,$fecha,$total,$usuario,$cancelado,$refclientes,$descuento);
+	
+	$numero = count($_POST);
+	$tags = array_keys($_POST);// obtiene los nombres de las varibles
+	$valores = array_values($_POST);// obtiene los valores de las varibles
+	$cantEncontrados = 0;
+	$cantidad = 1;
+	$idProducto = 0;
+	
+	if ((integer)$res > 0) {
+		
+		for($i=0;$i<$numero;$i++){
+			if (strpos($tags[$i],"prod") !== false) {
+				if (isset($valores[$i])) {
+					$idProducto = str_replace("refproducto","",$tags[$i]);
+					$cantidad	= $_POST['cantidad'.$idProducto];
+					$precio		= $_POST['precio'.$idProducto];
+					$nombre		= $_POST['nombre'.$idProducto];
+					$total		= $cantidad * $precio;
+					$nombreProducto = $serviciosReferencias->descontarStock($idProducto, $cantidad);
+					$serviciosReferencias->insertarDetalleventas($res,$idProducto,$cantidad,0,$precio,$total,$nombreProducto);
+					
+				}
+			}
+		}
+		
+		$serviciosReferencias->eliminarDetallepreventasPorVenta($aux);
+		$serviciosReferencias->eliminarVentasaux($aux);
+		echo '';
+	} else {
+		echo 'Huvo un error al insertar datos';
+	}
+}
+
+
+
+function insertarVentasAux($serviciosReferencias) {
+	$reftipopago = $_POST['reftipopago'];
+	$numero = $serviciosReferencias->generarNroVenta();
+	$fecha = date('Y-m-d');
+	$total = $_POST['total'];
+	$usuario = $_POST['usuario'];
+	$descuento = $_POST['descuento'];
+
+	$cancelado = 0;
+
+	$refclientes = $_POST['refclientes'];
+	
+	$res = $serviciosReferencias->insertarVentasaux($reftipopago,$numero,$fecha,$total,$usuario,$cancelado,$refclientes,$descuento);
 	
 	$numero = count($_POST);
 	$tags = array_keys($_POST);// obtiene los nombres de las varibles
@@ -549,8 +602,8 @@ function insertarVentas($serviciosReferencias) {
 					$precio		= $_POST['precio'.$idProducto];
 					$nombre		= $_POST['nombre'.$idProducto];
 					$total		= $cantidad * $precio;
-					$nombreProducto = $serviciosReferencias->descontarStock($idProducto, $cantidad);
-					$serviciosReferencias->insertarDetalleventas($res,$idProducto,$cantidad,0,$precio,$total,$nombreProducto);
+					//$nombreProducto = $serviciosReferencias->descontarStock($idProducto, $cantidad);
+					$serviciosReferencias->insertarDetallepreventas($res,$idProducto,$cantidad,0,$precio,$total,$nombre);
 					
 				}
 			}
@@ -1080,14 +1133,15 @@ $refcategorias = $_POST['refcategorias'];
 $tipoimagen = ''; 
 $unidades = $_POST['unidades']; 
 $refproveedores = $_POST['refproveedores']; 
-	
+$deposito = $_POST['deposito'];	
+
 	$existeCodigo = $serviciosReferencias->existeCodigo($codigo);
 	
 	if ($existeCodigo == 1) {
 		$codigo = $serviciosReferencias->generarCodigo();	
 	}
 	
-	$res = $serviciosReferencias->insertarProductos($codigo,$codigobarra,$nombre,$descripcion,$stock,$stockmin,$preciocosto,$precioventa,$preciodescuento,$utilidad,$imagen,$refcategorias,$tipoimagen,$unidades,$refproveedores); 
+	$res = $serviciosReferencias->insertarProductos($codigo,$codigobarra,$nombre,$descripcion,$stock,$stockmin,$preciocosto,$precioventa,$preciodescuento,$utilidad,$imagen,$refcategorias,$tipoimagen,$unidades,$refproveedores,$deposito); 
 	
 	if ((integer)$res > 0) { 
 		$imagenes = array("imagen" => 'imagen');
@@ -1117,13 +1171,15 @@ $refcategorias = $_POST['refcategorias'];
 $tipoimagen = ''; 
 $unidades = $_POST['unidades'];
 $refproveedores = $_POST['refproveedores']; 
+$deposito = $_POST['deposito'];	
+
 if (isset($_POST['activo'])) {
 $activo = 1;
 } else {
 $activo = 0;
 } 
 	
-	$res = $serviciosReferencias->modificarProductos($id,$codigo,$codigobarra,$nombre,$descripcion,$stock,$stockmin,$preciocosto,$precioventa,$preciodescuento,$utilidad,$imagen,$refcategorias,$tipoimagen,$unidades,$activo,$refproveedores); 
+	$res = $serviciosReferencias->modificarProductos($id,$codigo,$codigobarra,$nombre,$descripcion,$stock,$stockmin,$preciocosto,$precioventa,$preciodescuento,$utilidad,$imagen,$refcategorias,$tipoimagen,$unidades,$activo,$refproveedores,$deposito); 
 	
 	if ($res == true) { 
 		$imagenes = array("imagen" => 'imagen');

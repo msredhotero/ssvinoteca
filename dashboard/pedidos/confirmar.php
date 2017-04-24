@@ -188,6 +188,7 @@ if ($_SESSION['refroll_predio'] != 1) {
                         <th class="text-center">Nuevo Stock</th>
                         <th class="text-center">Precio</th>
                         <th class="text-center">Sub-Total</th>
+                        <th class="text-center">Deposito</th>
                     </tr>
                 </thead>
                 <tbody class="detalle">
@@ -207,6 +208,7 @@ if ($_SESSION['refroll_predio'] != 1) {
                             <td align="right"><?php echo $rowT['stock']; ?> <span class="text-success">+ <?php echo $rowT['cantidad']; ?></span> = <?php echo $rowT['stock']+$rowT['cantidad']; ?></td>
                             <td align="right"><?php echo $rowT['precio']; ?></td>
                             <td align="right"><?php echo $rowT['precio'] * $rowT['cantidad']; ?></td>
+                            <td align="left"><?php echo $rowT['deposito']; ?></td>
                     		</tr>
                     <?php
 							}

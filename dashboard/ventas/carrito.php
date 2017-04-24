@@ -27,7 +27,7 @@ $resMenu = $serviciosHTML->menu(utf8_encode($_SESSION['nombre_predio']),"Ventas"
 
 $id = $_GET['id'];
 
-$resResultado = $serviciosReferencias->traerVentasPorId($id);
+$resResultado = $serviciosReferencias->traerVentasAuxPorId($id);
 
 $descuento = mysql_result($resResultado,0,'descuento');
 /////////////////////// Opciones pagina ///////////////////////////////////////////////
@@ -37,7 +37,7 @@ $plural = "Ventas";
 
 $eliminar = "eliminarVentas";
 
-$modificar = "modificarVentas";
+$modificar = "insertarVentas";
 
 $idTabla = "idventa";
 
@@ -61,6 +61,9 @@ $cabeceras	= "<th>Producto</th>
 
 $carrito 	=	$serviciosReferencias->traerCarritoPorVenta($id);
 
+$lstClientes = $serviciosFunciones->devolverSelectBoxActivo( $serviciosReferencias->traerClientes(),array(1),'',mysql_result($resResultado,0,'refclientes'));
+
+$lstTipoPago = $serviciosFunciones->devolverSelectBoxActivo( $serviciosReferencias->traerTipopago(),array(1),'',mysql_result($resResultado,0,'reftipopago'));
 
 if ($_SESSION['idroll_predio'] != 1) {
 
@@ -108,7 +111,7 @@ if ($_SESSION['idroll_predio'] != 1) {
 		
 	</style>
     
-   
+   <link rel="stylesheet" href="../../css/chosen.css">
    <link href="../../css/perfect-scrollbar.css" rel="stylesheet">
       <!--<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>-->
       <script src="../../js/jquery.mousewheel.js"></script>
@@ -138,12 +141,35 @@ if ($_SESSION['idroll_predio'] != 1) {
         	<form class="form-inline formulario" role="form">
         	
 			<div class="row">
+            	<div class="form-group col-md-5" style="display:block">
+                	<label class="control-label" for="codigobarra" style="text-align:left">Seleccione el Cliente</label>
+                    <div class="input-group col-md-12">
+	                    <select data-placeholder="selecione el Cliente..." id="refclientes" name="refclientes" class="chosen-select" tabindex="2" style="width:100%;">
+                            
+                            <?php echo $lstClientes; ?>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="form-group col-md-5" style="display:block">
+                	<label class="control-label" for="codigobarra" style="text-align:left">Seleccione el Tipo Pago</label>
+                    <div class="input-group col-md-12">
+	                    <select data-placeholder="selecione el Tipo de Pago..." id="reftipopago" name="reftipopago" class="chosen-select" tabindex="2" style="width:100%;">
+                            
+                            <?php echo $lstTipoPago; ?>
+                        </select>
+                    </div>
+                </div>
+                
+                
             	<div class="form-group col-md-2" style="display:block">
                 	<label class="control-label" for="codigobarra" style="text-align:left">Descuento</label>
                     <div class="input-group col-md-12">
 	                    <input id="descuento" class="form-control" name="descuento" placeholder="Descuento..." required type="number" value="<?php echo $descuento; ?>">
                     </div>
                 </div>
+                
+                
                 
                 <div class="col-md-12">
 				<table class="table table-striped" id="table-6">
@@ -153,22 +179,37 @@ if ($_SESSION['idroll_predio'] != 1) {
                         <th class="text-center">Cantidad</th>
                         <th class="text-center">Precio</th>
                         <th class="text-center">Sub-Total</th>
-                        <th class="text-center">Precio Arriba/Abajo</th>
                         <th style="width:120px;" class="text-center">Acciones</th>
                     </thead>
-                    <tbody id="detalle">
+                    <tbody class="detalle">
                 <?php
 					$total = 0;
 					$subTotal = 0;
 					while ($row = mysql_fetch_array($carrito)) {
 				?>
-                	<tr>
-                		<th class="text-center"><?php echo $row['refproductos']; ?></th>
-                        <th style="width:260px;" class="text-center"><?php echo $row['nombre']; ?></th>
-                        <th class="text-center"><?php echo $row['cantidad']; ?></th>
-                        <th class="text-center"><?php if ($row['cantidad'] > 1) { echo $row['preciodescuento']; } else { echo $row['precio']; } ?></th>
-                        <th class="text-center"><?php if ($row['cantidad'] > 1) { echo ((float)$row['cantidad'] * (float)$row['preciodescuento']); } else { echo ((float)$row['cantidad'] * (float)$row['precio']); } ?></th>
-                        <th class="text-center"><?php if ($row['cantidad'] > 1) { ?><input type="checkbox" checked name="preciodescuento" id="preciodescuento"/><?php } else { ?><input type="checkbox" name="preciodescuento" id="preciodescuento"/><?php } ?></th>
+                
+                	<tr id="<?php echo $row['refproductos']; ?>">
+                		<th class="text-center">
+                        	<input type="text" name="refproducto<?php echo $row['refproductos']; ?>" id="refproducto<?php echo $row['refproductos']; ?>" value="<?php echo $row['refproductos']; ?>" readonly style="background-color:transparent; border:none;cursor:default;text-align: right; width:70px;">
+                        </th>
+                        <th style="width:260px;" class="text-center">
+                        <input type="text" name="nombre<?php echo $row['refproductos']; ?>" id="nombre<?php echo $row['refproductos']; ?>" value="<?php echo $row['nombre']; ?>" readonly style="background-color:transparent; border:none;cursor:default;text-align: right; width:70px;">
+                        </th>
+                        <th class="text-center">
+                        <input type="text" name="cantidad<?php echo $row['refproductos']; ?>" id="cantidad<?php echo $row['refproductos']; ?>" value="<?php echo $row['cantidad']; ?>" readonly style="background-color:transparent; border:none;cursor:default;text-align: right; width:70px;">
+                        </th>
+                        
+                        <th class="text-center"><select class="form-control precio" id="precio<?php echo $row['refproductos']; ?>" name="precio<?php echo $row['refproductos']; ?>">
+						<?php if ($row['cantidad'] > 1) { 
+						echo '<option value="'.$row['preciodescuento'].'">'.$row['preciodescuento'].'</option><option value="'.$row['precio'].'">'.$row['precio'].'</option>'; 
+						} else { 
+						echo '<option value="'.$row['precio'].'">'.$row['precio'].'</option><option value="'.$row['preciodescuento'].'">'.$row['preciodescuento'].'</option>';  
+						} ?></select></th>
+                        
+                        <th class="text-center">
+						<input type="text" class="subtotal" name="subtotal<?php echo $row['refproductos']; ?>" id="subtotal<?php echo $row['refproductos']; ?>" value="<?php if ($row['cantidad'] > 1) { echo ((float)$row['cantidad'] * (float)$row['preciodescuento']); } else { echo ((float)$row['cantidad'] * (float)$row['precio']); } ?>" readonly style="background-color:transparent; border:none;cursor:default;text-align: right; width:120px;">
+                        </th>
+                      
                         <th style="width:120px;" class="text-center"><button type="button" class="btn btn-danger eliminarfila" id="<?php echo $row['refproductos']; ?>" style="margin-left:0px;">Eliminar</button></th>
                     
                     
@@ -179,7 +220,7 @@ if ($_SESSION['idroll_predio'] != 1) {
                 	</tbody>
                     <tfoot>
                         <tr style="background-color:#CCC; font-weight:bold; font-size:18px;">
-                            <td colspan="6" align="right">
+                            <td colspan="5" align="right">
                                 Sub-Total $
                             </td>
                             <td>
@@ -187,7 +228,7 @@ if ($_SESSION['idroll_predio'] != 1) {
                             </td>
                         </tr>
                         <tr style="background-color:#DDD; font-weight:bold; font-size:18px;">
-                            <td colspan="6" align="right">
+                            <td colspan="5" align="right">
                                 Total - Descuento $
                             </td>
                             <td>
@@ -216,15 +257,16 @@ if ($_SESSION['idroll_predio'] != 1) {
                     <li>
                         <button type="button" class="btn btn-success" id="cargar" style="margin-left:0px;">Finalizar</button>
                     </li>
-                    <li>
-                        <button type="button" class="btn btn-danger varborrar" id="<?php echo $id; ?>" style="margin-left:0px;">Eliminar</button>
-                    </li>
+                    
                     <li>
                         <button type="button" class="btn btn-default volver" style="margin-left:0px;">Volver</button>
                     </li>
                 </ul>
                 </div>
             </div>
+            <input type="hidden" name="aux" id="aux" value="<?php echo $id; ?>" />
+            <input type="hidden" name="usuario" id="usuario" value="<?php echo utf8_encode($_SESSION['nombre_predio']); ?>" />
+            <input type="hidden" name="accion" id="accion" value="insertarVentas" />
             </form>
     	</div>
     </div>
@@ -243,14 +285,43 @@ if ($_SESSION['idroll_predio'] != 1) {
 <script type="text/javascript">
 $(document).ready(function(){
 	
-	if ('<?php echo $cancelado; ?>' == 'Si') {
-		$('#cancelado').prop('checked',true);	
-		$('#cancelado').prop('disabled',true);
-	} else {
-		$('#cancelado').prop('checked',false);	
-	}
+
 	
+	$('.precio').change(function() {
+		usersid =  $(this).attr("id");
+		var op = $("#"+usersid+" option:selected").val();
+		
+		var id = usersid.replace("precio","");
+		
+		$("#subtotal"+id).val(op * $("#cantidad"+id).val());
+		
+		$('#total').val(SumarTabla());
+	});
+
 	
+	function SumarTabla() {
+		var suma = 0;
+		/*
+		$('.detalle tr').each(function(){
+			alert($(this).find('td').eq(1).text());
+			suma += parseFloat($(this).find('td').eq(3).text()||0,10); //numero de la celda 3
+		})
+		*/
+		$('.subtotal').each(function(index, element) {
+			suma += parseFloat($(this).val()||0,10);
+        });
+		$('#totaldescuento').val((parseFloat(suma) - parseFloat($('#descuento').val())).toFixed(2));
+		
+		return suma.toFixed(2);
+
+	  }
+	  
+	  $('#descuento').change(function() {
+		  $('#totaldescuento').val((parseFloat(SumarTabla()) - parseFloat($('#descuento').val())).toFixed(2));
+	  });
+	  
+	
+	$('#total').val(SumarTabla());
 	
 	$('#total').prop('readonly', true);
 	
@@ -420,7 +491,7 @@ $(document).ready(function(){
 												
 											});
 											$("#load").html('');
-											url = "modificar.php?id=<?php echo $id; ?>";
+											url = "index.php";
 											$(location).attr('href',url);
                                             
 											
@@ -458,6 +529,19 @@ $(document).ready(function(){
 
 });
 </script>
+<script src="../../js/chosen.jquery.js" type="text/javascript"></script>
+<script type="text/javascript">
+    var config = {
+      '.chosen-select'           : {},
+      '.chosen-select-deselect'  : {allow_single_deselect:true},
+      '.chosen-select-no-single' : {disable_search_threshold:10},
+      '.chosen-select-no-results': {no_results_text:'Oops, nothing found!'},
+      '.chosen-select-width'     : {width:"95%"}
+    }
+    for (var selector in config) {
+      $(selector).chosen(config[selector]);
+    }
+  </script>
 <?php } ?>
 </body>
 </html>

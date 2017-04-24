@@ -191,7 +191,8 @@ if ($_SESSION['refroll_predio'] != 1) {
                         <th style="width:12%" class="text-center">Cantidad</th>
                         <th style="width:15%" class="text-center">Nuevo Stock</th>
                         <th style="width:12%" class="text-center">Precio</th>
-                        <th style="width:50px;" class="text-center">Sub-Total</th>
+                        <th style="width:12%" class="text-center">Sub-Total</th>
+                        
                     </tr>
                 </thead>
                 <tbody class="detalle">
@@ -216,7 +217,7 @@ if ($_SESSION['refroll_predio'] != 1) {
                     		<tr>
                             <td align="center"><input class="form-control chequeado" type="checkbox" name="chequeado<?php echo $rowT['iddetallepedido']; ?>" id="<?php echo $rowT['iddetallepedido']; ?>" /></td>
                     		<td><?php echo $rowT['codigo']; ?></td>
-                    		<td><?php echo $rowT['nombre']; ?></td>
+                    		<td><?php echo $rowT['nombre']." - Deposito: ".$rowT['deposito']; ?></td>
                             <td>
     						
                             <div class="form-group has-feedback" id="estado<?php echo $rowT['iddetallepedido']; ?>">
@@ -229,6 +230,8 @@ if ($_SESSION['refroll_predio'] != 1) {
                             <td align="right"><span class="stock<?php echo $rowT['iddetallepedido']; ?>"><?php echo $rowT['stock']; ?></span> <span class="text-success">+ <span class="nuevo<?php echo $rowT['iddetallepedido']; ?>"><?php echo $rowT['cantidad']; ?></span></span> = <span class="nuevostock<?php echo $rowT['iddetallepedido']; ?>"><?php echo $rowT['stock']+$rowT['cantidad']; ?></span></td>
                             <td align="right"><span class="precio<?php echo $rowT['iddetallepedido']; ?>"><?php echo $rowT['precio']; ?></span></td>
                             <td style="width:50px;" align="right" class="subtotal<?php echo $rowT['iddetallepedido']; ?>"><?php echo $rowT['precio'] * $rowT['cantidad']; ?></td>
+                    		</tr>
+                            
                     		</tr>
                     <?php
 							}
