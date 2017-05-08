@@ -257,14 +257,14 @@ if ($_SESSION['refroll_predio'] != 1) {
             	<div class="form-group col-md-2" style="display:block">
                 	<label class="control-label" for="codigobarra" style="text-align:left">Cantidad</label>
                     <div class="input-group col-md-12">
-	                    <input id="cantidadbuscar" style="padding:13px; font-size:1.7em;" name="cantidadbuscar" placeholder="Cantidad..." required type="number" value="1">
+	                    <input id="cantidadbuscar" class="botonesVentas" name="cantidadbuscar" placeholder="Cantidad..." required type="number" value="1">
                     </div>
                 </div>
                 
                 <div class="form-group col-md-5" style="display:block">
                 	<label class="control-label" for="codigobarra" style="text-align:left">Codigo de Barras</label>
                     <div class="input-group col-md-12">
-	                    <input id="codigobarrabuscar" style="padding:13px; font-size:1.7em;" name="codigobarrabuscar" placeholder="Codigo de Barras..." type="text">
+	                    <input id="codigobarrabuscar" class="botonesVentas" name="codigobarrabuscar" placeholder="Codigo de Barras..." type="text">
                     </div>
                 </div>
 
@@ -285,7 +285,7 @@ if ($_SESSION['refroll_predio'] != 1) {
                 <div class="form-group col-md-3" style="display:block">
                 	<label class="control-label" for="codigobarra" style="text-align:left">Descuento</label>
                     <div class="input-group col-md-12">
-	                    <input id="descuento" style="padding:13px; font-size:1.7em;" name="descuento" placeholder="Cantidad..." required type="number" value="0">
+	                    <input id="descuento" class="botonesVentas" name="descuento" placeholder="Cantidad..." required type="number" value="0">
                     </div>
                 </div>
 
