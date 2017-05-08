@@ -169,7 +169,7 @@ if ($_SESSION['refroll_predio'] != 1) {
 
  <?php echo $resMenu; ?>
 
-<div id="content">
+<div id="content" align="center">
 	
     <div class="boxInfoLargo tile-stats tile-white stat-tile" style="margin-bottom:-15px;">
         <div id="headBoxInfo">
@@ -230,6 +230,7 @@ if ($_SESSION['refroll_predio'] != 1) {
     	</div>
     </div>
     
+    
     <div class="boxInfoLargo tile-stats tile-white stat-tile">
         <div id="headBoxInfo" style="background-color:#C30;">
         	<p style="color: #fff; font-size:18px; height:16px;">Carga de <?php echo $plural; ?></p>
@@ -238,7 +239,21 @@ if ($_SESSION['refroll_predio'] != 1) {
     	<div class="cuerpoBox">
         	<form class="form-inline formulario" role="form">
         	<div class="row">
+				
+                <div class="form-group col-md-3" style="display:block">
+                	<div class="input-group col-md-12">
+                    	<ul class="list-inline">
+                        <li>
+	                    <input type="radio" class="form-control" name="reftipopago" id="contado" checked value="1"/>Contado
+                        </li>
+                        <li>
+                        <input type="radio" class="form-control" name="reftipopago" id="credito" value="3"/>Credito
+                        </li>
+                        </ul>
+                    </div>
 
+                </div>
+                
             	<div class="form-group col-md-2" style="display:block">
                 	<label class="control-label" for="codigobarra" style="text-align:left">Cantidad</label>
                     <div class="input-group col-md-12">
@@ -246,25 +261,17 @@ if ($_SESSION['refroll_predio'] != 1) {
                     </div>
                 </div>
                 
-                <div class="form-group col-md-7" style="display:block">
+                <div class="form-group col-md-4" style="display:block">
                 	<label class="control-label" for="codigobarra" style="text-align:left">Codigo de Barras</label>
                     <div class="input-group col-md-12">
 	                    <input id="codigobarrabuscar" class="form-control" name="codigobarrabuscar" placeholder="Codigo de Barras..." type="text">
                     </div>
                 </div>
 
-                <div class="form-group col-md-3" style="display:block">
-                	<label class="control-label text-right" for="producto" style="text-align:right"></label>
-                    <div class="input-group col-md-12 text-right">
-	                    <ul class="list-inline">
-                        <li>
-                        	<button type="button" class="btn btn-info" id="ver" data-toggle="modal" data-target="#myModal" style="margin-left:0px;"><span class="glyphicon glyphicon-search"></span> Ver</button>
-                        </li>
-                    </div>
-                </div>
+
                 
                 
-                <div class="form-group col-md-5" style="display:block">
+                <div class="form-group col-md-3" style="display:none;">
                 	<label class="control-label" for="codigobarra" style="text-align:left">Seleccione el Cliente</label>
                     <div class="input-group col-md-12">
 	                    <select data-placeholder="selecione el Cliente..." id="refclientes" name="refclientes" class="chosen-select" tabindex="2" style="width:100%;">
@@ -273,24 +280,15 @@ if ($_SESSION['refroll_predio'] != 1) {
                         </select>
                     </div>
                 </div>
+
                 
-                <div class="form-group col-md-5" style="display:block">
-                	<label class="control-label" for="codigobarra" style="text-align:left">Seleccione el Tipo Pago</label>
-                    <div class="input-group col-md-12">
-	                    <select data-placeholder="selecione el Tipo de Pago..." id="reftipopago" name="reftipopago" class="chosen-select" tabindex="2" style="width:100%;">
-                            
-                            <?php echo $lstTipoPago; ?>
-                        </select>
-                    </div>
-                </div>
-                
-                <div class="form-group col-md-2" style="display:block">
+                <div class="form-group col-md-3" style="display:block">
                 	<label class="control-label" for="codigobarra" style="text-align:left">Descuento</label>
                     <div class="input-group col-md-12">
 	                    <input id="descuento" class="form-control" name="descuento" placeholder="Cantidad..." required type="number" value="0">
                     </div>
                 </div>
-                
+
             </div>
 			<hr>
          <div class='row' style="margin-left:25px; margin-right:25px;" id="tabla">
@@ -343,6 +341,19 @@ if ($_SESSION['refroll_predio'] != 1) {
             <div class="row">
                 <div class="col-md-12">
                 <ul class="list-inline" style="margin-left:15px;">
+                    
+                    <li>
+                    	Paga con:
+                    </li>
+                    <li>
+						<input id="paga" style="padding:16px; font-size:1.9em;" name="paga" placeholder="Paga con..." required type="text" value="0">
+                    </li>
+                    <li>
+                    	Su vuelto:
+                    </li>
+                    <li>
+						<input id="vuelto" style="padding:16px; font-size:1.9em;" name="vuelto" readonly placeholder="Su vuelto..." required type="text" value="0">
+                    </li>
                     <li>
                         <button type="button" class="btn btn-primary" id="cargar" style="margin-left:0px;">Confirmar</button>
                     </li>
@@ -418,7 +429,7 @@ if ($_SESSION['refroll_predio'] != 1) {
 $(document).ready(function(){
 	
 	$('#refproductobuscarbarra').focus();
-	
+	$('#colapsarMenu').click();
 	$('#buscar').click(function(e) {
         $.ajax({
 				data:  {busqueda: $('#busqueda').val(),
@@ -808,6 +819,9 @@ $(document).ready(function(){
 	  }
 	  
 	  $('#descuento').change(function() {
+		  if ($(this).val() == '') {
+			  $(this).val('0');
+		  }
 		  $('#totaldescuento').val((parseFloat(SumarTabla()) - parseFloat($('#descuento').val())).toFixed(2));
 	  });
 	  
@@ -889,19 +903,8 @@ $('.form_date').datetimepicker({
 	format: 'dd/mm/yyyy'
 });
 </script>
-<script src="../../js/chosen.jquery.js" type="text/javascript"></script>
-<script type="text/javascript">
-    var config = {
-      '.chosen-select'           : {},
-      '.chosen-select-deselect'  : {allow_single_deselect:true},
-      '.chosen-select-no-single' : {disable_search_threshold:10},
-      '.chosen-select-no-results': {no_results_text:'Oops, nothing found!'},
-      '.chosen-select-width'     : {width:"95%"}
-    }
-    for (var selector in config) {
-      $(selector).chosen(config[selector]);
-    }
-  </script>
+
 <?php } ?>
+
 </body>
 </html>
