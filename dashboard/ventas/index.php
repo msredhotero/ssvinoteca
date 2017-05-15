@@ -298,30 +298,47 @@ if ($_SESSION['refroll_predio'] != 1) {
                     <tr>
                         <th class="text-center">Id</th>
                         <th style="width:260px;" class="text-center">Producto</th>
-                        <th class="text-center">Cantidad</th>
+                        <th style="width:60px;" class="text-center">Cantidad</th>
                         <th class="text-center">Precio</th>
                         <th class="text-center">Sub-Total</th>
+                        <th class="text-center">Precio-Descuento</th>
+                        <th class="text-center">Sub-Total-Desc.</th>
+                        
                         <th style="width:120px;" class="text-center">Acciones</th>
                     </tr>
                 </thead>
                 <tbody class="detalle">
-                	
+                	<tr>
+                    	<td colspan="8"></td>
+                    </tr>
                 </tbody>
                 <tfoot>
                     <tr style="background-color:#CCC; font-weight:bold; font-size:18px;">
-                        <td colspan="5" align="right">
+                        <td colspan="3" align="right">
                             Sub-Total $
                         </td>
-                        <td>
+                        <td style="border-right:3px solid #333;">
                             <input type="text" readonly name="total" id="total" value="0" style="border:none; background-color:#CCC;"/>
+                        </td>
+                        <td colspan="3" align="right">
+                            Sub-Total-Descuentos $
+                        </td>
+                        <td>
+                            <input type="text" readonly name="totaldesc" id="totaldesc" value="0" style="border:none; background-color:#CCC;"/>
                         </td>
                     </tr>
                     <tr style="background-color:#DDD; font-weight:bold; font-size:18px;">
-                        <td colspan="5" align="right">
+                        <td colspan="3" align="right" style="width:30%;">
                             Total - Descuento $
                         </td>
-                        <td>
+                        <td style="border-right:3px solid #333;">
                             <input type="text" readonly name="totaldescuento" id="totaldescuento" value="0" style="border:none; background-color:#DDD;"/>
+                        </td>
+                        <td colspan="3" align="right">
+                            Total-Descuento - Descuento $
+                        </td>
+                        <td>
+                            <input type="text" readonly name="totaldescdescuento" id="totaldescdescuento" value="0" style="border:none; background-color:#DDD;"/>
                         </td>
                     </tr>
                 </tfoot>
@@ -428,6 +445,8 @@ if ($_SESSION['refroll_predio'] != 1) {
 <script type="text/javascript">
 $(document).ready(function(){
 	
+	
+	
 	$('#refproductobuscarbarra').focus();
 	$('#colapsarMenu').click();
 	$('#buscar').click(function(e) {
@@ -448,6 +467,10 @@ $(document).ready(function(){
 		});
 		
 	});
+	
+	$('#paga').change(function(e) {
+        $('#vuelto').val($(this).val() - $('#totaldescuento').val());
+    });
 	
 	$('.abrir').click(function() {
 		
@@ -495,32 +518,7 @@ $(document).ready(function(){
 		$('.filt2').show();
 	});
 	
-	$('table.table').dataTable({
-		"order": [[ 0, "desc" ]],
-		"language": {
-			"emptyTable":     "No hay datos cargados",
-			"info":           "Mostrar _START_ hasta _END_ del total de _TOTAL_ filas",
-			"infoEmpty":      "Mostrar 0 hasta 0 del total de 0 filas",
-			"infoFiltered":   "(filtrados del total de _MAX_ filas)",
-			"infoPostFix":    "",
-			"thousands":      ",",
-			"lengthMenu":     "Mostrar _MENU_ filas",
-			"loadingRecords": "Cargando...",
-			"processing":     "Procesando...",
-			"search":         "Buscar:",
-			"zeroRecords":    "No se encontraron resultados",
-			"paginate": {
-				"first":      "Primero",
-				"last":       "Ultimo",
-				"next":       "Siguiente",
-				"previous":   "Anterior"
-			},
-			"aria": {
-				"sortAscending":  ": activate to sort column ascending",
-				"sortDescending": ": activate to sort column descending"
-			}
-		  }
-	} );
+	
 	
 	$('#codigobarrabuscar').keypress(function(e) {
 		if(e.which == 13) {
@@ -727,6 +725,7 @@ $(document).ready(function(){
 							json = $.parseJSON(response);
 							
 							monto = parseFloat(json[0].precioventa) * parseInt(cantidad);
+							montoDesc = parseFloat(json[0].preciodescuento) * parseInt(cantidad);
 							//var idRetornado = insertarDetalleAux(json[0].idproducto, cantidad, json[0].precioventa, monto, json);
 							
 							$('#prodNombre').val(json[0].nombre);
@@ -738,21 +737,37 @@ $(document).ready(function(){
 							});
 							*/
 							
+							
 							$("#tabla tbody tr").each(function (index) {
-								var cantidadNueva, subtotalNuevo;
+								
+								
+								var cantidadNueva, subtotalNuevo, subtotalDescNuevo;
 								
 								if ($(this).find('td').eq(0).children("input").attr('id') == 'prod'+json[0].idproducto) {
+									
 									
 									cantidadNueva = parseInt(cantidad) + parseInt($(this).find('td').eq(2).children("input").val());
 									subtotalNuevo = parseFloat(monto) + parseFloat($(this).find('td').eq(4).text());
 									
+									subtotalDescNuevo = parseFloat(montoDesc) * cantidadNueva;
+									
 									$(this).remove();
 									
-									$('.detalle').prepend('<tr><td align="center"><input type="checkbox" name="prod'+json[0].idproducto+'" id="prod'+json[0].idproducto+'" checked  onclick="this.checked=!this.checked"/></td><td><input type="text" name="nombre'+json[0].idproducto+'" id="nombre'+json[0].idproducto+'" value="'+json[0].nombre+'" readonly style="background-color:transparent; border:none;cursor:default;text-align: center;" /></td><td align="center"><input type="text" name="cant'+json[0].idproducto+'" id="cant'+json[0].idproducto+'" value="'+cantidadNueva+'" readonly style="background-color:transparent; border:none;cursor:default;text-align: center;" /></td><td align="right"><input type="text" name="precio'+json[0].idproducto+'" id="precio'+json[0].idproducto+'" value="'+json[0].precioventa+'" readonly style="background-color:transparent; border:none;cursor:default;text-align: right; width:70px;" /></td><td align="right">'+subtotalNuevo.toFixed(2)+'</td><td class="text-center"><button type="button" class="btn btn-danger eliminarfila" id="'+json[0].idproducto+'" style="margin-left:0px;">Eliminar</button></td></tr>');
+									$('.detalle').prepend('<tr><td align="center"><input type="checkbox" name="prod'+json[0].idproducto+'" id="prod'+json[0].idproducto+'" checked  onclick="this.checked=!this.checked"/></td><td><input type="text" name="nombre'+json[0].idproducto+'" id="nombre'+json[0].idproducto+'" value="'+json[0].nombre+'" readonly style="background-color:transparent; border:none;cursor:default;text-align: center;" /></td><td align="center"><input type="text" name="cant'+json[0].idproducto+'" id="cant'+json[0].idproducto+'" value="'+cantidadNueva+'" readonly style="background-color:transparent; border:none;cursor:default;text-align: center;" /></td><td align="right"><input type="text" name="precio'+json[0].idproducto+'" id="precio'+json[0].idproducto+'" value="'+json[0].precioventa+'" readonly style="background-color:transparent; border:none;cursor:default;text-align: right; width:70px;" /></td><td align="right">'+subtotalNuevo.toFixed(2)+'</td></td><td align="right"><input type="text" name="precio'+json[0].idproducto+'" id="precio'+json[0].idproducto+'" value="'+json[0].preciodescuento+'" readonly style="background-color:transparent; border:none;cursor:default;text-align: right; width:70px;" /></td><td align="right">'+subtotalDescNuevo.toFixed(2)+'</td><td class="text-center"><button type="button" class="btn btn-danger eliminarfila" id="'+json[0].idproducto+'" style="margin-left:0px;">Eliminar</button></td></tr>');
 									
 									return false;
 								} else {
-									$('.detalle').prepend('<tr id="'+json[0].idproducto+'"><td align="center"><input type="checkbox" name="prod'+json[0].idproducto+'" id="prod'+json[0].idproducto+'" checked  onclick="this.checked=!this.checked"/></td><td><input type="text" name="nombre'+json[0].idproducto+'" id="nombre'+json[0].idproducto+'" value="'+json[0].nombre+'" readonly style="background-color:transparent; border:none;cursor:default;text-align: center;" /></td><td align="center"><input type="text" name="cant'+json[0].idproducto+'" id="cant'+json[0].idproducto+'" value="'+cantidad+'" readonly style="background-color:transparent; border:none;cursor:default;text-align: center;" /></td><td align="right"><input type="text" name="precio'+json[0].idproducto+'" id="precio'+json[0].idproducto+'" value="'+json[0].precioventa+'" readonly style="background-color:transparent; border:none;cursor:default;text-align: right; width:70px;" /></td><td align="right">'+monto.toFixed(2)+'</td><td class="text-center"><button type="button" class="btn btn-danger eliminarfila" id="'+json[0].idproducto+'" style="margin-left:0px;">Eliminar</button></td></tr>');
+									
+									
+									if (cantidad >= 2) {
+										montoDesc			= json[0].preciodescuento;
+										subtotalDescNuevo	= json[0].preciodescuento * cantidad;
+									} else {
+										montoDesc			= json[0].precioventa;
+										subtotalDescNuevo	= monto;
+									}
+									
+									$('.detalle').prepend('<tr id="'+json[0].idproducto+'"><td align="center"><input type="checkbox" name="prod'+json[0].idproducto+'" id="prod'+json[0].idproducto+'" checked  onclick="this.checked=!this.checked"/></td><td><input type="text" name="nombre'+json[0].idproducto+'" id="nombre'+json[0].idproducto+'" value="'+json[0].nombre+'" readonly style="background-color:transparent; border:none;cursor:default;text-align: center;" /></td><td align="center"><input type="text" name="cant'+json[0].idproducto+'" id="cant'+json[0].idproducto+'" value="'+cantidad+'" readonly style="background-color:transparent; border:none;cursor:default;text-align: center;" /></td><td align="right"><input type="text" name="precio'+json[0].idproducto+'" id="precio'+json[0].idproducto+'" value="'+json[0].precioventa+'" readonly style="background-color:transparent; border:none;cursor:default;text-align: right; width:70px;" /></td><td align="right">'+monto.toFixed(2)+'</td></td><td align="right"><input type="text" name="precio'+json[0].idproducto+'" id="precio'+json[0].idproducto+'" value="'+montoDesc+'" readonly style="background-color:transparent; border:none;cursor:default;text-align: right; width:70px;" /></td><td align="right">'+subtotalDescNuevo.toFixed(2)+'</td><td class="text-center"><button type="button" class="btn btn-danger eliminarfila" id="'+json[0].idproducto+'" style="margin-left:0px;">Eliminar</button></td></tr>');
 									return false;
 								}
 								/*
@@ -807,13 +822,16 @@ $(document).ready(function(){
 	
 	function SumarTabla() {
 		var suma = 0;
+		var sumadesc = 0;
 		$('.detalle tr').each(function(){
 			
 			suma += parseFloat($(this).find('td').eq(4).text()||0,10); //numero de la celda 3
+			sumadesc += parseFloat($(this).find('td').eq(6).text()||0,10); //numero de la celda 5
 		})
 		
 		$('#totaldescuento').val((parseFloat(suma) - parseFloat($('#descuento').val())).toFixed(2));
-		
+		$('#totaldescdescuento').val((parseFloat(sumadesc) - parseFloat($('#descuento').val())).toFixed(2));
+		$('#totaldesc').val((parseFloat(sumadesc)).toFixed(2));
 		return suma.toFixed(2);
 
 	  }
