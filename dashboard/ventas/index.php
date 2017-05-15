@@ -363,16 +363,25 @@ if ($_SESSION['refroll_predio'] != 1) {
                     	Paga con:
                     </li>
                     <li>
-						<input id="paga" style="padding:16px; font-size:1.9em;" name="paga" placeholder="Paga con..." required type="text" value="0">
+						<input id="paga" style="padding:16px; font-size:1.9em; width:150px;" name="paga" placeholder="Paga con..." required type="text" value="0">
                     </li>
                     <li>
                     	Su vuelto:
                     </li>
                     <li>
-						<input id="vuelto" style="padding:16px; font-size:1.9em;" name="vuelto" readonly placeholder="Su vuelto..." required type="text" value="0">
+						<input id="vuelto" style="padding:16px; font-size:1.9em; width:150px;" name="vuelto" readonly placeholder="Su vuelto..." required type="text" value="0">
                     </li>
                     <li>
-                        <button type="button" class="btn btn-primary" id="cargar" style="margin-left:0px;">Confirmar</button>
+                        <button type="button" class="btn btn-info" id="cargarP" style="margin-left:0px;">Confirmar</button>
+                    </li>
+                    <li>
+                    	Su vuelto Precio-Desc.:
+                    </li>
+                    <li>
+						<input id="vueltodesc" style="padding:16px; font-size:1.9em; width:150px;" name="vueltodesc" readonly placeholder="Su vuelto..." required type="text" value="0">
+                    </li>
+                    <li>
+                        <button type="button" class="btn btn-primary" id="cargarPD" style="margin-left:0px;">Confirmar</button>
                     </li>
                 </ul>
                 </div>
@@ -445,7 +454,21 @@ if ($_SESSION['refroll_predio'] != 1) {
 <script type="text/javascript">
 $(document).ready(function(){
 	
+	$('#credito').click(function() {
+		if ($(this).prop('checked') ) {
+			$('#cargarPD').hide(200);
+		} else {
+			$('#cargarPD').show(200);
+		}
+	});
 	
+	$('#contado').click(function() {
+		if ($(this).prop('checked') ) {
+			$('#cargarPD').show(200);
+		} else {
+			$('#cargarPD').hide(200);
+		}
+	});
 	
 	$('#refproductobuscarbarra').focus();
 	$('#colapsarMenu').click();
@@ -470,6 +493,7 @@ $(document).ready(function(){
 	
 	$('#paga').change(function(e) {
         $('#vuelto').val($(this).val() - $('#totaldescuento').val());
+		$('#vueltodesc').val($(this).val() - $('#totaldescdescuento').val());
     });
 	
 	$('.abrir').click(function() {
