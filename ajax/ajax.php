@@ -284,6 +284,9 @@ break;
 case 'insertarVentas':
 insertarVentas($serviciosReferencias);
 break;
+case 'insertarVentasPrecioDescuento':
+insertarVentasPrecioDescuento($serviciosReferencias);
+break;
 case 'insertarVentasAux':
 	insertarVentasAux($serviciosReferencias);
 	break;
@@ -525,7 +528,7 @@ function insertarVentas($serviciosReferencias) {
 	$reftipopago = $_POST['reftipopago'];
 	$numero = $serviciosReferencias->generarNroVenta();
 	$fecha = date('Y-m-d');
-	$total = $_POST['total'];
+	$total = $_POST['totaldescuento'];
 	$usuario = $_POST['usuario'];
 	$descuento = $_POST['descuento'];
 
@@ -561,8 +564,58 @@ function insertarVentas($serviciosReferencias) {
 			}
 		}
 		
-		$serviciosReferencias->eliminarDetallepreventasPorVenta($aux);
-		$serviciosReferencias->eliminarVentasaux($aux);
+		//$serviciosReferencias->eliminarDetallepreventasPorVenta($aux);
+		//$serviciosReferencias->eliminarVentasaux($aux);
+		echo '';
+	} else {
+		echo 'Huvo un error al insertar datos';
+	}
+}
+
+
+
+function insertarVentasPrecioDescuento($serviciosReferencias) {
+	$reftipopago = $_POST['reftipopago'];
+	$numero = $serviciosReferencias->generarNroVenta();
+	$fecha = date('Y-m-d');
+	$total = $_POST['totaldescdescuento'];
+	$usuario = $_POST['usuario'];
+	$descuento = $_POST['descuento'];
+
+	$cancelado = 0;
+	
+	//$aux	=	$_POST['aux'];
+	
+	$refclientes = $_POST['refclientes'];
+	
+	$res = $serviciosReferencias->insertarVentas($reftipopago,$numero,$fecha,$total,$usuario,$cancelado,$refclientes,$descuento);
+	
+	$numero = count($_POST);
+	$tags = array_keys($_POST);// obtiene los nombres de las varibles
+	$valores = array_values($_POST);// obtiene los valores de las varibles
+	$cantEncontrados = 0;
+	$cantidad = 1;
+	$idProducto = 0;
+	
+	if ((integer)$res > 0) {
+		
+		for($i=0;$i<$numero;$i++){
+			if (strpos($tags[$i],"prod") !== false) {
+				if (isset($valores[$i])) {
+					$idProducto = str_replace("prod","",$tags[$i]);
+					$cantidad	= $_POST['cant'.$idProducto];
+					$precio		= $_POST['preciodescuento'.$idProducto];
+					$nombre		= $_POST['nombre'.$idProducto];
+					$total		= $cantidad * $precio;
+					$nombreProducto = $serviciosReferencias->descontarStock($idProducto, $cantidad);
+					$serviciosReferencias->insertarDetalleventas($res,$idProducto,$cantidad,0,$precio,$total,$nombreProducto);
+					
+				}
+			}
+		}
+		
+		//$serviciosReferencias->eliminarDetallepreventasPorVenta($aux);
+		//$serviciosReferencias->eliminarVentasaux($aux);
 		echo '';
 	} else {
 		echo 'Huvo un error al insertar datos';
