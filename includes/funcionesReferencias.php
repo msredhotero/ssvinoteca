@@ -777,7 +777,7 @@ return $res;
 } 
 
 function descontarStock($idProductos, $cantidad) {
-	$sql = "update dbproductos set stock = (stock - ".$cantidad.") where idproducto = ".$idProductos;
+	$sql = "update dbproductos set stock = (stock - ".$cantidad.") where idproducto = ".$idProductos." and stock > 0";
 	$res = $this->query($sql,0); 
 	
 	$producto = $this->traerProductosPorId($idProductos);
