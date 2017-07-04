@@ -534,7 +534,7 @@ function insertarVentas($serviciosReferencias) {
 
 	$cancelado = 0;
 	
-	$aux	=	$_POST['aux'];
+	//$aux	=	$_POST['aux'];
 	
 	$refclientes = $_POST['refclientes'];
 	
@@ -552,8 +552,8 @@ function insertarVentas($serviciosReferencias) {
 		for($i=0;$i<$numero;$i++){
 			if (strpos($tags[$i],"prod") !== false) {
 				if (isset($valores[$i])) {
-					$idProducto = str_replace("refproducto","",$tags[$i]);
-					$cantidad	= $_POST['cantidad'.$idProducto];
+					$idProducto = str_replace("prod","",$tags[$i]);
+					$cantidad	= $_POST['cant'.$idProducto];
 					$precio		= $_POST['precio'.$idProducto];
 					$nombre		= $_POST['nombre'.$idProducto];
 					$total		= $cantidad * $precio;
