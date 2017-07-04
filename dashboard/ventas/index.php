@@ -118,7 +118,7 @@ if ($_SESSION['refroll_predio'] != 1) {
     <link rel="stylesheet" href="../../css/jquery-ui.css">
 
     <script src="../../js/jquery-ui.js"></script>
-    
+    <script src="../../js/jquery.number.min.js"></script>
 	<!-- Latest compiled and minified CSS -->
     <link rel="stylesheet" href="../../bootstrap/css/bootstrap.min.css"/>
 	<link href='http://fonts.googleapis.com/css?family=Lato&subset=latin,latin-ext' rel='stylesheet' type='text/css'>
@@ -152,7 +152,22 @@ if ($_SESSION['refroll_predio'] != 1) {
 		
 	</style>
     
-   
+   <script>
+	$(document).ready(function(){
+
+		
+		$('#cantidadbuscar').each(function(intIndex){
+			$(this).number( true, 0,'','' );
+			$(this).focusout( function() {
+				if ($(this).val() == '') {
+					$(this).val(1);
+				}
+			});
+		});
+		
+	});
+	</script>
+
    <link href="../../css/perfect-scrollbar.css" rel="stylesheet">
       <!--<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>-->
       <script src="../../js/jquery.mousewheel.js"></script>
@@ -161,6 +176,8 @@ if ($_SESSION['refroll_predio'] != 1) {
       jQuery(document).ready(function ($) {
         "use strict";
         $('#navigation').perfectScrollbar();
+		
+		
       });
     </script>
 </head>
@@ -257,7 +274,7 @@ if ($_SESSION['refroll_predio'] != 1) {
             	<div class="form-group col-md-2" style="display:block">
                 	<label class="control-label" for="codigobarra" style="text-align:left">Cantidad</label>
                     <div class="input-group col-md-12">
-	                    <input id="cantidadbuscar" class="botonesVentas" name="cantidadbuscar" placeholder="Cantidad..." required type="number" value="1">
+	                    <input id="cantidadbuscar" maxlength="2" class="botonesVentas" name="cantidadbuscar" placeholder="Cantidad..." required type="text" value="1">
                     </div>
                 </div>
                 
@@ -453,6 +470,7 @@ if ($_SESSION['refroll_predio'] != 1) {
 
 <script type="text/javascript">
 $(document).ready(function(){
+
 	
 	$('#credito').click(function() {
 		if ($(this).prop('checked') ) {
@@ -554,7 +572,11 @@ $(document).ready(function(){
 		$('#vueltodesc').val(0);
 		if(e.which == 13) {
 			getProducto($('#codigobarrabuscar').val(), $('#cantidadbuscar').val(), 'traerProductoPorCodigoBarra');
+			
 		}
+		setTimeout(function() {
+			$(this).fadeOut(1500);
+		},3000);
 	});
 	
 	
@@ -736,7 +758,10 @@ $(document).ready(function(){
 		});
 	});
 	
-	
+	function isEmptyJSON(obj) {
+	  for(var i in obj) { return false; }
+	  return true;
+	}
 	
 
 	function getProducto(idProd, cantidad, accion) {
@@ -748,11 +773,14 @@ $(document).ready(function(){
 					beforeSend: function () {
 						$('#agregar').hide();
 						$('#agregarfila').hide();	
-						$('#codigobarrabuscar').val('');
+						$('#codigobarrabuscar').hide();
 					},
 					success:  function (response) {
-						if(response){
+						
+						if ($.parseJSON(response).length != 0) {
+							
 							//idproducto,codigo,nombre,descripcion,stock,stockmin,preciocosto,precioventa,utilidad,estado,imagen,idcategoria,tipoimagen,nroserie,codigobarra
+							
 							json = $.parseJSON(response);
 							
 							monto = parseFloat(json[0].precioventa) * parseInt(cantidad);
@@ -762,15 +790,11 @@ $(document).ready(function(){
 							$('#prodNombre').val(json[0].nombre);
 							$('#prodPrecio').val(json[0].precioventa);
 							
-							/*
-							$('.detalle tr').each(function(){
-								
-							});
-							*/
-							
-							
+							var agrega = 0;
+							var cadAgrega = '';
+
 							$("#tabla tbody tr").each(function (index) {
-								
+								cadAgrega = '';
 								
 								var cantidadNueva, subtotalNuevo, subtotalDescNuevo;
 								
@@ -784,13 +808,13 @@ $(document).ready(function(){
 									
 									$(this).remove();
 									
-									$('.detalle').prepend('<tr><td align="center"><input type="checkbox" name="prod'+json[0].idproducto+'" id="prod'+json[0].idproducto+'" checked  onclick="this.checked=!this.checked"/></td><td><input type="text" name="nombre'+json[0].idproducto+'" id="nombre'+json[0].idproducto+'" value="'+json[0].nombre+'" readonly style="background-color:transparent; border:none;cursor:default;text-align: center;" /></td><td align="center"><input type="text" name="cant'+json[0].idproducto+'" id="cant'+json[0].idproducto+'" value="'+cantidadNueva+'" readonly style="background-color:transparent; border:none;cursor:default;text-align: center;" /></td><td align="right"><input type="text" name="precio'+json[0].idproducto+'" id="precio'+json[0].idproducto+'" value="'+json[0].precioventa+'" readonly style="background-color:transparent; border:none;cursor:default;text-align: right; width:70px;" /></td><td align="right">'+subtotalNuevo.toFixed(2)+'</td></td><td align="right"><input type="text" name="preciodescuento'+json[0].idproducto+'" id="preciodescuento'+json[0].idproducto+'" value="'+json[0].preciodescuento+'" readonly style="background-color:transparent; border:none;cursor:default;text-align: right; width:70px;" /></td><td align="right">'+subtotalDescNuevo.toFixed(2)+'</td><td class="text-center"><button type="button" class="btn btn-danger eliminarfila" id="'+json[0].idproducto+'" style="margin-left:0px;">Eliminar</button></td></tr>');
+									cadAgrega = '<tr><td align="center"><input type="checkbox" name="prod'+json[0].idproducto+'" id="prod'+json[0].idproducto+'" checked  onclick="this.checked=!this.checked"/></td><td><input type="text" name="nombre'+json[0].idproducto+'" id="nombre'+json[0].idproducto+'" value="'+json[0].nombre+'" readonly style="background-color:transparent; border:none;cursor:default;text-align: center;" /></td><td align="center"><input type="text" name="cant'+json[0].idproducto+'" id="cant'+json[0].idproducto+'" value="'+cantidadNueva+'" readonly style="background-color:transparent; border:none;cursor:default;text-align: center;" /></td><td align="right"><input type="text" name="precio'+json[0].idproducto+'" id="precio'+json[0].idproducto+'" value="'+json[0].precioventa+'" readonly style="background-color:transparent; border:none;cursor:default;text-align: right; width:70px;" /></td><td align="right">'+subtotalNuevo.toFixed(2)+'</td></td><td align="right"><input type="text" name="preciodescuento'+json[0].idproducto+'" id="preciodescuento'+json[0].idproducto+'" value="'+json[0].preciodescuento+'" readonly style="background-color:transparent; border:none;cursor:default;text-align: right; width:70px;" /></td><td align="right">'+subtotalDescNuevo.toFixed(2)+'</td><td class="text-center"><button type="button" class="btn btn-danger eliminarfila" id="'+json[0].idproducto+'" style="margin-left:0px;">Eliminar</button></td></tr>';
 									
 									return false;
 								} else {
 									
 									
-									if (cantidad >= 2) {
+									if (cantidad >= 0) {
 										montoDesc			= json[0].preciodescuento;
 										subtotalDescNuevo	= json[0].preciodescuento * cantidad;
 									} else {
@@ -798,37 +822,48 @@ $(document).ready(function(){
 										subtotalDescNuevo	= monto;
 									}
 									
-									$('.detalle').prepend('<tr id="'+json[0].idproducto+'"><td align="center"><input type="checkbox" name="prod'+json[0].idproducto+'" id="prod'+json[0].idproducto+'" checked  onclick="this.checked=!this.checked"/></td><td><input type="text" name="nombre'+json[0].idproducto+'" id="nombre'+json[0].idproducto+'" value="'+json[0].nombre+'" readonly style="background-color:transparent; border:none;cursor:default;text-align: center;" /></td><td align="center"><input type="text" name="cant'+json[0].idproducto+'" id="cant'+json[0].idproducto+'" value="'+cantidad+'" readonly style="background-color:transparent; border:none;cursor:default;text-align: center;" /></td><td align="right"><input type="text" name="precio'+json[0].idproducto+'" id="precio'+json[0].idproducto+'" value="'+json[0].precioventa+'" readonly style="background-color:transparent; border:none;cursor:default;text-align: right; width:70px;" /></td><td align="right">'+monto.toFixed(2)+'</td></td><td align="right"><input type="text" name="preciodescuento'+json[0].idproducto+'" id="preciodescuento'+json[0].idproducto+'" value="'+montoDesc+'" readonly style="background-color:transparent; border:none;cursor:default;text-align: right; width:70px;" /></td><td align="right">'+subtotalDescNuevo.toFixed(2)+'</td><td class="text-center"><button type="button" class="btn btn-danger eliminarfila" id="'+json[0].idproducto+'" style="margin-left:0px;">Eliminar</button></td></tr>');
-									return false;
+									cadAgrega = '<tr id="'+json[0].idproducto+'"><td align="center"><input type="checkbox" name="prod'+json[0].idproducto+'" id="prod'+json[0].idproducto+'" checked  onclick="this.checked=!this.checked"/></td><td><input type="text" name="nombre'+json[0].idproducto+'" id="nombre'+json[0].idproducto+'" value="'+json[0].nombre+'" readonly style="background-color:transparent; border:none;cursor:default;text-align: center;" /></td><td align="center"><input type="text" name="cant'+json[0].idproducto+'" id="cant'+json[0].idproducto+'" value="'+cantidad+'" readonly style="background-color:transparent; border:none;cursor:default;text-align: center;" /></td><td align="right"><input type="text" name="precio'+json[0].idproducto+'" id="precio'+json[0].idproducto+'" value="'+json[0].precioventa+'" readonly style="background-color:transparent; border:none;cursor:default;text-align: right; width:70px;" /></td><td align="right">'+monto.toFixed(2)+'</td></td><td align="right"><input type="text" name="preciodescuento'+json[0].idproducto+'" id="preciodescuento'+json[0].idproducto+'" value="'+montoDesc+'" readonly style="background-color:transparent; border:none;cursor:default;text-align: right; width:70px;" /></td><td align="right">'+subtotalDescNuevo.toFixed(2)+'</td><td class="text-center"><button type="button" class="btn btn-danger eliminarfila" id="'+json[0].idproducto+'" style="margin-left:0px;">Eliminar</button></td></tr>';
+									
 								}
-								/*
-								$(this).children("td").each(function (index2) {
-									if (index2 == 0) {
-										if ($(this).children("input").attr('id') == 'prod'+json[0].idproducto) {
-		
-										}
-									}
-								});
-								*/
+								
+								
+								
 							});
 					
 							
+							$('.detalle').prepend(cadAgrega);
 							
 							
+							$('#codigobarrabuscar').show();	
+							$('#codigobarrabuscar').val('');
+							$('#codigobarrabuscar').focus();
 							
 							$('#cantidadbuscar').val(1);
 									
 							$("#aviso").show();
-									
+								
 							$('#total').val(SumarTabla());
 						} else {
 							//var producto = ['', 0];
 							$('#prodNombre').val('');
 							$('#prodPrecio').val(0);
+							alert('No se encontro el producto con el codigo de barras: ' + idProd);
+							$('#codigobarrabuscar').show();	
+							$('#codigobarrabuscar').val('');
+							$('#codigobarrabuscar').focus();
+							
 						}
-						
+
 						$('#agregar').show();
 						$('#agregarfila').show();
+						
+					},
+					//si ha ocurrido un error
+					error: function(){
+						
+						$(".alert").html('<strong>Error!</strong> Actualice la pagina');
+						$("#load").html('');
+						
 					}
 			});	
 	}
@@ -988,7 +1023,7 @@ $(document).ready(function(){
 		
     });
     
-	$('#refproductobuscarbarra').focus();
+	$('#codigobarrabuscar').focus();
 
 });
 </script>
