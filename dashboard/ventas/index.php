@@ -804,7 +804,8 @@ $(document).ready(function(){
 									cantidadNueva = parseInt(cantidad) + parseInt($(this).find('td').eq(2).children("input").val());
 									subtotalNuevo = parseFloat(monto) + parseFloat($(this).find('td').eq(4).text());
 									
-									subtotalDescNuevo = parseFloat(montoDesc) * cantidadNueva;
+									subtotalDescNuevo = parseFloat(json[0].preciodescuento) * cantidadNueva;
+									
 									
 									$(this).remove();
 									
